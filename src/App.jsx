@@ -6,8 +6,8 @@ const Home = () => {
   return <div>Home</div>;
 };
 
-const SearchPage = () => {
-  return <div>SearchPage</div>;
+const Pedidos = () => {
+  return <div>Pedidos</div>;
 };
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/search-page" element={<SearchPage />} />
+        <Route path="/pedidos" element={<Pedidos />} />
         <Route path="/prescripcion" element={<Prescripcion />} />
       </Routes>
     </div>

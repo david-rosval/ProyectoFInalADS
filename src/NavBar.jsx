@@ -15,9 +15,9 @@ export const NavBar = () => {
               Home
             </li>
           </Link>
-          <Link className="w-1/3 text-center" to="/search-page">
+          <Link className="w-1/3 text-center" to="/pedidos">
             <li className="hover:bg-slate-700 hover:text-white py-2 hover:font-semibold">
-              Search Page
+              Pedidos
             </li>
           </Link>
           <Link className="w-1/3 text-center" to="/prescripcion">

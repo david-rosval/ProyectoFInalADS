@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { obtenerLike } from "./lib/conexionApi";
+import Modal from "./components/Modal";
 
 export const Prescripcion = () => {
   // States para la búsqueda de clientes
@@ -7,6 +8,13 @@ export const Prescripcion = () => {
   const [btnBuscarClick, setBtnBuscarClick] = useState(false);
   const [clientes, setClientes] = useState([]);
   const [cliente, setCliente] = useState({});
+  const [openModal, setOpenModal] = useState(false);
+
+  // States para crear nuevo cliente
+  const [nombresYApellidos, setNombresYApellidos] = useState("");
+  const [edad, setEdad] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
 
   useEffect(() => {
     if (btnBuscarClick) {
@@ -92,8 +100,10 @@ export const Prescripcion = () => {
         fill="none"
         strokeLinecap="round"
         strokeLinejoin="round"
+        /* ABRIR MODAL PARA AGREGAR CLIENTE */
         onClick={() => {
           console.log("agregar");
+          setOpenModal(true);
         }}
       >
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -216,6 +226,19 @@ export const Prescripcion = () => {
           </p>
         </div>
       )}
+
+      {openModal && <Modal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        nombresYApellidos={nombresYApellidos}
+        setNombresYApellidos={setNombresYApellidos}
+        edad={edad}
+        setEdad={setEdad}
+        telefono={telefono}
+        setTelefono={setTelefono}
+        direccion={direccion}
+        setDireccion={setDireccion}
+      />}
     </div>
   );
 };
