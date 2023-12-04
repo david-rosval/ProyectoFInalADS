@@ -41,3 +41,9 @@ export const actualizarPut = async (endpoint, data) => {
     const res = await response.json()
     return res
 }
+
+export const getEspecifico = async (endpoint, dato) => {
+    const response = await fetch(`${url}/${endpoint}`)
+    const data = await response.json()
+    return data
+} 

@@ -2,7 +2,7 @@ import React from "react";
 
 const DetalleTablaMedidas = ({ medidas }) => {
   return (
-    (medidas && medidas.length) > 0 && (
+    (medidas && medidas.length > 0) && (
       <div className=" flex flex-col gap-5 w-[462.3px] items-center justify-center px-5 mt-5">
         <div className=" flex flex-col items-center justify-center">
           <h3 className="font-semibold text-gray-500 mb-2 uppercase ">Lejos</h3>

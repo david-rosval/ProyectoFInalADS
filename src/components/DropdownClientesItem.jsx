@@ -3,7 +3,7 @@ import React from "react";
 const DropdownClientesItem = ({ cli, setBtnBuscarClick, setCliente, setClienteBusqueda, setNotaAdicional }) => {
   return (
     <li
-      key={cli["idCliente"]}
+      key={cli["id_cliente"]}
       onClick={() => {
         setBtnBuscarClick(false);
         setClienteBusqueda("");

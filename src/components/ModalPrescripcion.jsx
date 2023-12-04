@@ -4,11 +4,13 @@ import DetalleClienteModalPrescripcion from "./DetalleClienteModalPrescripcion";
 
 const ModalPrescripcion = ({
   setOpenModalPrescripcion,
-  setPrescripcion,
+  setPrescripcionLista,
   cliente,
   medidas,
   fechaFormateada,
   notaAdicional,
+  setActualizacionMedidas,
+  setAsignacionNuevasMedidas
 }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
@@ -44,6 +46,9 @@ const ModalPrescripcion = ({
                 e.preventDefault();
                 console.log("No");
                 setOpenModalPrescripcion(false);
+                setActualizacionMedidas(false)
+                setAsignacionNuevasMedidas(false)
+                setPrescripcionLista(false);
               }}
             >
               No
@@ -53,7 +58,13 @@ const ModalPrescripcion = ({
               className="cursor-pointer py-2 w-1/2 bg-slate-700 hover:bg-slate-800 text-white font-semibold text-center rounded-md mt-2"
               onClick={(e) => {
                 e.preventDefault();
-                console.log("Sí");
+                const registroPrescripcion = {
+                  "id_medidas": medidas[0]["id_medidas"],
+                  "detalle_lunas": notaAdicional,
+                  "fecha": fechaFormateada,
+                }
+                setPrescripcionLista(true)
+                
               }}
             >
               Sí

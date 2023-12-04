@@ -10,19 +10,24 @@ export const NavBar = () => {
       </div>
       <nav className="bg-slate-700">
         <ul id="nav-ul" className="flex flex-row justify-center text-xl">
-          <NavLink className="w-1/3 text-center" to="/">
+          <NavLink className="w-1/4 text-center" to="/">
             <li className="hover:bg-slate-800 text-white py-2 hover:font-semibold">
               Home
             </li>
           </NavLink>
-          <NavLink className="w-1/3 text-center" to="/pedidos">
+          <NavLink className="w-1/4 text-center" to="/pedidos">
             <li className="hover:bg-slate-800 text-white py-2 hover:font-semibold">
               Pedidos
             </li>
           </NavLink>
-          <NavLink className="w-1/3 text-center" to="/prescripcion">
+          <NavLink className="w-1/4 text-center" to="/prescripcion">
             <li className="hover:bg-slate-800 text-white py-2 hover:font-semibold">
               Emitir Prescripción
+            </li>
+          </NavLink>
+          <NavLink className="w-1/4 text-center" to="/catalogo">
+            <li className="hover:bg-slate-800 text-white py-2 hover:font-semibold">
+              Catálogo
             </li>
           </NavLink>
         </ul>

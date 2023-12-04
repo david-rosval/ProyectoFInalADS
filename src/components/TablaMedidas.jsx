@@ -77,8 +77,7 @@ const TablaMedidas = ({
                       <input
                         type="text"
                         className="text-center w-full h-full"
-                        onChange={(e) =>
-                          !medidasEncontradas &&
+                        onChange={(e) =>                          
                           setAgudezavisualODlejos(e.target.value)
                         }
                         value={agudezavisualODlejos}
@@ -189,7 +188,6 @@ const TablaMedidas = ({
                           type="text"
                           className="text-center w-full h-full"
                           onChange={(e) =>
-                            !medidasEncontradas &&
                             setAgudezavisualODcerca(e.target.value)
                           }
                           value={agudezavisualODcerca}
@@ -232,7 +230,6 @@ const TablaMedidas = ({
                           type="text"
                           className="text-center w-full h-full"
                           onChange={(e) =>
-                            !medidasEncontradas &&
                             setAgudezavisualOIcerca(e.target.value)
                           }
                           value={agudezavisualOIcerca}

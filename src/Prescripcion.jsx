@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { obtenerEspecifico, registrarPost } from "./lib/conexionApi";
+import { actualizarPut, obtenerEspecifico, registrarPost } from "./lib/conexionApi";
 import Modal from "./components/Modal";
 import ModalPrescripcion from "./components/ModalPrescripcion";
 import TablaMedidas from "./components/TablaMedidas";
-import DropdownClientesItem from "./components/DropdownClientesItem";
 import BarraBusquedaCliente from "./components/BarraBusquedaCliente";
 import DatosCliente from "./components/DatosCliente";
 
@@ -32,6 +31,7 @@ export const Prescripcion = ({setPrescripcion}) => {
   const [medidas, setMedidas] = useState([]);
   const [medidasEncontradas, setMedidasEncontradas] = useState(false);
   const [asignacionNuevasMedidas, setAsignacionNuevasMedidas] = useState(false)
+  const [actualizacionMedidas, setActualizacionMedidas] = useState(false)
 
   // lejos
   const [esferaODlejos, setEsferaODLejos] = useState(0);
@@ -74,7 +74,7 @@ export const Prescripcion = ({setPrescripcion}) => {
   }, [btnBuscarClick]);
 
   useEffect(() => {
-    if (Object.keys(cliente).length !== 0) {
+    if (Object.keys(cliente).length !== 0 && asignacionNuevasMedidas) {
       obtenerEspecifico(
         "medidas/busqueda",
         { id_cliente: parseInt(cliente["id_cliente"]) },
@@ -83,6 +83,17 @@ export const Prescripcion = ({setPrescripcion}) => {
       console.log('medidas encontradas');
     } else return;
   }, [cliente, asignacionNuevasMedidas]);
+
+   useEffect(() => {
+    if (Object.keys(cliente).length !== 0 && actualizacionMedidas) {
+      obtenerEspecifico(
+        "medidas/busqueda",
+        { id_cliente: parseInt(cliente["id_cliente"]) },
+        setMedidas
+      );
+      console.log('medidas encontradas');
+    } else return
+  }, [actualizacionMedidas]) 
 
   useEffect(() => {
     if (medidas.length !== 0) {
@@ -135,6 +146,7 @@ export const Prescripcion = ({setPrescripcion}) => {
       }
       if (prescripcionLista) {
         registrarPost('prescripciones', nuevaPrescripcion)
+        console.log('prescripcion registrada');
       } else {
         console.log('no se ha emitido prescripcion');
       }
@@ -152,37 +164,58 @@ export const Prescripcion = ({setPrescripcion}) => {
 
   const handleSubmitEmitirPrescripcion = (e) => {
     e.preventDefault()
-    const nuevoMonturas = {
-      "Esfera_OD_lejos": parseFloat(esferaODlejos),
-      "Cilindro_OD_lejos": parseFloat(cilindroODlejos),
-      "Eje_OD_lejos": parseFloat(ejeODlejos),
-      "Agudeza_visual_OD_lejos": parseFloat(agudezavisualODlejos),
-      "Esfera_OI_lejos": parseFloat(esferaOIlejos),
-      "Cilindro_OI_lejos": parseFloat(cilindroOIlejos),
-      "Eje_OI_lejos": parseFloat(ejeOIlejos),
-      "Agudeza_visual_OI_lejos": parseFloat(agudezavisualOIlejos),
-      "Esfera_OD_cerca": parseFloat(esferaODcerca),
-      "Cilindro_OD_cerca": parseFloat(cilindroODcerca),
-      "Eje_OD_cerca": parseFloat(ejeODcerca),
-      "Agudeza_visual_OD_cerca": parseFloat(agudezavisualODcerca),
-      "Esfera_OI_cerca": parseFloat(esferaOIcerca),
-      "Cilindro_OI_cerca": parseFloat(cilindroOIcerca),
-      "Eje_OI_cerca": parseFloat(ejeOIcerca),
-      "Agudeza_visual_OI_cerca": parseFloat(agudezavisualOIcerca),
-      "id_cliente": cliente["id_cliente"],
-    };
-    if (!medidasEncontradas && Object.keys(cliente).length !== 0) {
-
-      registrarPost('medidas', nuevoMonturas)
-      console.log('medidas registradas');
-      setAsignacionNuevasMedidas(true)
-      console.log('medidas encontradas');
-    } else {
-      if (medidasEncontradas && Object.keys(cliente).length !== 0) {
-
+    if (Object.keys(cliente).length !== 0) {
+      const nuevoMonturas = {
+        "Esfera_OD_lejos": parseFloat(esferaODlejos),
+        "Cilindro_OD_lejos": parseFloat(cilindroODlejos),
+        "Eje_OD_lejos": parseFloat(ejeODlejos),
+        "Agudeza_visual_OD_lejos": parseFloat(agudezavisualODlejos),
+        "Esfera_OI_lejos": parseFloat(esferaOIlejos),
+        "Cilindro_OI_lejos": parseFloat(cilindroOIlejos),
+        "Eje_OI_lejos": parseFloat(ejeOIlejos),
+        "Agudeza_visual_OI_lejos": parseFloat(agudezavisualOIlejos),
+        "Esfera_OD_cerca": parseFloat(esferaODcerca),
+        "Cilindro_OD_cerca": parseFloat(cilindroODcerca),
+        "Eje_OD_cerca": parseFloat(ejeODcerca),
+        "Agudeza_visual_OD_cerca": parseFloat(agudezavisualODcerca),
+        "Esfera_OI_cerca": parseFloat(esferaOIcerca),
+        "Cilindro_OI_cerca": parseFloat(cilindroOIcerca),
+        "Eje_OI_cerca": parseFloat(ejeOIcerca),
+        "Agudeza_visual_OI_cerca": parseFloat(agudezavisualOIcerca),
+        "id_cliente": cliente["id_cliente"],
+      };
+      
+      if (!medidasEncontradas ) {
+        registrarPost('medidas', nuevoMonturas)
+        console.log('medidas registradas');
+        setAsignacionNuevasMedidas(true)
+        console.log('medidas encontradas');
+      } else {
+        if (medidas.length !== 0) {
+          const actualizarMonturas = {
+            "id_medidas": medidas[0]["id_medidas"],
+            "Esfera_OD_lejos": parseFloat(esferaODlejos),
+            "Cilindro_OD_lejos": parseFloat(cilindroODlejos),
+            "Eje_OD_lejos": parseFloat(ejeODlejos),
+            "Agudeza_visual_OD_lejos": parseFloat(agudezavisualODlejos),
+            "Esfera_OI_lejos": parseFloat(esferaOIlejos),
+            "Cilindro_OI_lejos": parseFloat(cilindroOIlejos),
+            "Eje_OI_lejos": parseFloat(ejeOIlejos),
+            "Agudeza_visual_OI_lejos": parseFloat(agudezavisualOIlejos),
+            "Esfera_OD_cerca": parseFloat(esferaODcerca),
+            "Cilindro_OD_cerca": parseFloat(cilindroODcerca),
+            "Eje_OD_cerca": parseFloat(ejeODcerca),
+            "Agudeza_visual_OD_cerca": parseFloat(agudezavisualODcerca),
+            "Esfera_OI_cerca": parseFloat(esferaOIcerca),
+            "Cilindro_OI_cerca": parseFloat(cilindroOIcerca),
+            "Eje_OI_cerca": parseFloat(ejeOIcerca),
+            "Agudeza_visual_OI_cerca": parseFloat(agudezavisualOIcerca),
+            "id_cliente": cliente["id_cliente"],
+          };
+          actualizarPut("medidas",actualizarMonturas)
+          setActualizacionMedidas(true)
+        }
       }
-
-
     }
 
     setOpenModalPrescripcion(true)
@@ -203,21 +236,33 @@ export const Prescripcion = ({setPrescripcion}) => {
         />
 
         {/* DROPDOWN DE CLIENTES ENCONTRADOS */}
-        <ul>
+     
+
+
           {clientes && clienteBusqueda !== "" && btnBuscarClick !== false
-            ? clientes.map((cli) => {
+            ? <ul>
+              {clientes.map((cli) => {
                 return (
-                  <DropdownClientesItem 
-                  cli={cli} 
-                  setBtnBuscarClick={setBtnBuscarClick}
-                  setCliente={setCliente}
-                  setClienteBusqueda={setClienteBusqueda}
-                  setNotaAdicional={setNotaAdicional}
-                  />
+                <li
+                  key={cli["id_cliente"]}
+                  onClick={() => {
+                    setBtnBuscarClick(false);
+                    setClienteBusqueda("");
+                    setCliente(cli);
+                    setNotaAdicional("");
+                  }}
+                  className="cursor-pointer hover:font-semibold hover:bg-slate-50 p-2 "
+                >
+                  <p>{cli["nombres_y_apellidos"]}</p>
+                  <p className="text-sm text-slate-400">{cli["edad"]}</p>
+                  <p className="text-sm text-slate-400">{cli["telefono"]}</p>
+                  <p className="text-sm text-slate-400">{cli["direccion"]}</p>
+                </li>
                 );
-              })
+              })}
+            </ul>
             : ""}
-        </ul>
+      
       </div>
 
       <svg
@@ -322,11 +367,14 @@ export const Prescripcion = ({setPrescripcion}) => {
       )}
       {openModalPrescripcion && (
         <ModalPrescripcion 
-        setOpenModalPrescripcion={setOpenModalPrescripcion} setPrescripcion={setPrescripcion}
+        setOpenModalPrescripcion={setOpenModalPrescripcion} 
+        setPrescripcionLista={setPrescripcionLista}
         cliente={cliente}
         medidas={medidas}
         fechaFormateada={fechaFormateada}
         notaAdicional={notaAdicional}
+        setActualizacionMedidas={setActualizacionMedidas}
+        setAsignacionNuevasMedidas={setAsignacionNuevasMedidas}
         />
       )}
     </div>
