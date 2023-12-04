@@ -18,8 +18,6 @@ export const registrarPost = async (endpoint, data) => {
     return res
 }
 
-
-
 export const obtenerEspecifico = async (endpoint, dato, funcionSet) => {
     const response = await fetch(`${url}/${endpoint}`, {
         method: 'POST',
@@ -31,3 +29,4 @@ export const obtenerEspecifico = async (endpoint, dato, funcionSet) => {
     const data = await response.json()
     funcionSet(data)
 }
+

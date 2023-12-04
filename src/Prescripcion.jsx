@@ -1,18 +1,37 @@
 import { useEffect, useState } from "react";
-import { obtenerEspecifico } from "./lib/conexionApi";
+import { obtenerEspecifico, registrarPost } from "./lib/conexionApi";
 import Modal from "./components/Modal";
+import ModalPrescripcion from "./components/ModalPrescripcion";
+import TablaMedidas from "./components/TablaMedidas";
+import DropdownClientesItem from "./components/DropdownClientesItem";
+import BarraBusquedaCliente from "./components/BarraBusquedaCliente";
+import DatosCliente from "./components/DatosCliente";
 
-export const Prescripcion = () => {
+const fecha = new Date();
+let dia = fecha.getDate();
+let mes = fecha.getMonth() + 1; // Los meses en JavaScript empiezan desde 0
+let año = fecha.getFullYear();
+
+// Asegurándose de que el día y el mes sean de dos dígitos
+if (dia < 10) dia = '0' + dia;
+if (mes < 10) mes = '0' + mes;
+
+const fechaFormateada = dia + '/' + mes + '/' + año;
+
+
+export const Prescripcion = ({setPrescripcion}) => {
   // States para la búsqueda de clientes
   const [clienteBusqueda, setClienteBusqueda] = useState("");
   const [btnBuscarClick, setBtnBuscarClick] = useState(false);
   const [clientes, setClientes] = useState([]);
   const [cliente, setCliente] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  const [openModalPrescripcion, setOpenModalPrescripcion] = useState(false)
 
   // States para medidas
   const [medidas, setMedidas] = useState([]);
   const [medidasEncontradas, setMedidasEncontradas] = useState(false);
+  const [asignacionNuevasMedidas, setAsignacionNuevasMedidas] = useState(false)
 
   // lejos
   const [esferaODlejos, setEsferaODLejos] = useState(0);
@@ -42,6 +61,7 @@ export const Prescripcion = () => {
 
   // States para crear nueva prescripción
   const [notaAdicional, setNotaAdicional] = useState("");
+  const [prescripcionLista, setPrescripcionLista] = useState(false)
 
   useEffect(() => {
     if (btnBuscarClick) {
@@ -60,8 +80,9 @@ export const Prescripcion = () => {
         { id_cliente: parseInt(cliente["id_cliente"]) },
         setMedidas
       );
+      console.log('medidas encontradas');
     } else return;
-  }, [cliente]);
+  }, [cliente, asignacionNuevasMedidas]);
 
   useEffect(() => {
     if (medidas.length !== 0) {
@@ -105,7 +126,23 @@ export const Prescripcion = () => {
     }
   }, [medidas]);
 
+  useEffect(() => {
+    if (medidas.length !== 0) {
+      const nuevaPrescripcion = {
+        "id_medidas": medidas[0]["id_medidas"],
+        "detalle_lunas": notaAdicional,
+        "fecha": fechaFormateada,
+      }
+      if (prescripcionLista) {
+        registrarPost('prescripciones', nuevaPrescripcion)
+      } else {
+        console.log('no se ha emitido prescripcion');
+      }
+    }
+  }, [prescripcionLista])
+
   const handleButtonBuscarCliente = (e) => {
+    
     e.preventDefault();
     if (clienteBusqueda !== "") {
       setBtnBuscarClick(true);
@@ -115,6 +152,35 @@ export const Prescripcion = () => {
 
   const handleSubmitEmitirPrescripcion = (e) => {
     e.preventDefault()
+    if (!medidasEncontradas && Object.keys(cliente).length !== 0) {
+      const nuevoMonturas = {
+        "Esfera_OD_lejos": parseFloat(esferaODlejos),
+        "Cilindro_OD_lejos": parseFloat(cilindroODlejos),
+        "Eje_OD_lejos": parseFloat(ejeODlejos),
+        "Agudeza_visual_OD_lejos": parseFloat(agudezavisualODlejos),
+        "Esfera_OI_lejos": parseFloat(esferaOIlejos),
+        "Cilindro_OI_lejos": parseFloat(cilindroOIlejos),
+        "Eje_OI_lejos": parseFloat(ejeOIlejos),
+        "Agudeza_visual_OI_lejos": parseFloat(agudezavisualOIlejos),
+        "Esfera_OD_cerca": parseFloat(esferaODcerca),
+        "Cilindro_OD_cerca": parseFloat(cilindroODcerca),
+        "Eje_OD_cerca": parseFloat(ejeODcerca),
+        "Agudeza_visual_OD_cerca": parseFloat(agudezavisualODcerca),
+        "Esfera_OI_cerca": parseFloat(esferaOIcerca),
+        "Cilindro_OI_cerca": parseFloat(cilindroOIcerca),
+        "Eje_OI_cerca": parseFloat(ejeOIcerca),
+        "Agudeza_visual_OI_cerca": parseFloat(agudezavisualOIcerca),
+        "id_cliente": cliente["id_cliente"],
+      };
+
+      registrarPost('medidas', nuevoMonturas)
+      console.log('medidas registradas');
+      setAsignacionNuevasMedidas(true)
+      console.log('medidas encontradas');
+    }
+
+    setOpenModalPrescripcion(true)
+    
     console.log('submit');
   }
 
@@ -122,52 +188,26 @@ export const Prescripcion = () => {
     <div className=" w-3/5 flex flex-row my-5 p-5 h-auto">
       <div className="w-2/5 pr-5">
         {/* BARRA DE BÚSQUEDA DE CLIENTE */}
-        <div className="flex flex-row gap-2 mb-2">
-          <input
-            className="border w-3/4 py-2 px-3 rounded-md"
-            id="input-buscar-cliente "
-            type="text"
-            placeholder="Nombre del cliente"
-            onChange={(e) => {
-              setClienteBusqueda(e.target.value);
-              setBtnBuscarClick(false);
-            }}
-            value={clienteBusqueda}
-          />
-          <button
-            className="rounded-md w-1/4 bg-slate-700 hover:bg-slate-800 text-white font-semibold px-2 text-center"
-            onClick={handleButtonBuscarCliente}
-          >
-            Buscar
-          </button>
-        </div>
+        <BarraBusquedaCliente 
+        clienteBusqueda = {clienteBusqueda}
+        setClienteBusqueda = {setClienteBusqueda}
+        setBtnBuscarClick = {setBtnBuscarClick}
+        setAsignacionNuevasMedidas = {setAsignacionNuevasMedidas}
+        handleButtonBuscarCliente = {handleButtonBuscarCliente}
+        />
 
         {/* DROPDOWN DE CLIENTES ENCONTRADOS */}
         <ul>
           {clientes && clienteBusqueda !== "" && btnBuscarClick !== false
-            ? clientes.map((cliente) => {
-                const nombresYApellidos = "nombres_y_apellidos";
-                const idCliente = "id_cliente";
+            ? clientes.map((cli) => {
                 return (
-                  <li
-                    key={cliente[idCliente]}
-                    onClick={() => {
-                      setBtnBuscarClick(false);
-                      setClienteBusqueda("");
-                      setCliente(cliente);
-                      setNotaAdicional("");
-                    }}
-                    className="cursor-pointer hover:font-semibold hover:bg-slate-50 p-2"
-                  >
-                    <p>{cliente[nombresYApellidos]}</p>
-                    <p className="text-sm text-slate-400">{cliente["edad"]}</p>
-                    <p className="text-sm text-slate-400">
-                      {cliente["telefono"]}
-                    </p>
-                    <p className="text-sm text-slate-400">
-                      {cliente["direccion"]}
-                    </p>
-                  </li>
+                  <DropdownClientesItem 
+                  cli={cli} 
+                  setBtnBuscarClick={setBtnBuscarClick}
+                  setCliente={setCliente}
+                  setClienteBusqueda={setClienteBusqueda}
+                  setNotaAdicional={setNotaAdicional}
+                  />
                 );
               })
             : ""}
@@ -201,25 +241,11 @@ export const Prescripcion = () => {
       {/* MOSTRAR CLIENTE SELECCIONADO */}
       {Object.keys(cliente).length !== 0 ? (
         <form onSubmit={handleSubmitEmitirPrescripcion} className="px-5  flex flex-col w-3/5 h-full pb-5 border-l-2">
-          <div className="w-full">
-            <p className=" font-semibold text-4xl mb-8">
-              {cliente["nombres_y_apellidos"]}
-            </p>
-            <div className="flex flex-row">
-              <p className="w-1/2 mb-2">Edad: {cliente["edad"]}</p>
-              <p className="w-1/2 mb-2">Teléfono: {cliente["telefono"]}</p>
-            </div>
-            <p className="mb-2"> Dirección: {cliente["direccion"]}</p>
-            <label htmlFor="notaAdicional">Nota adicional: {""}</label>
-            <textarea
-              className="mt-2 border w-full py-2 px-3 rounded-md"
-              id="notaAdicional"
-              type="text"
-              placeholder="Detalle de lunas"
-              onChange={(e) => setNotaAdicional(e.target.value)}
-              value={notaAdicional}
-            ></textarea>
-          </div>
+          <DatosCliente 
+            cliente={cliente}
+            notaAdicional={notaAdicional}
+            setNotaAdicional={setNotaAdicional}
+          />
 
           {!medidasEncontradas && (
             <p className="mt-5 text-center text-xl text-gray-500">
@@ -227,231 +253,41 @@ export const Prescripcion = () => {
             </p>
           )}
 
-          <div className=" flex flex-col items-center justify-center mt-5 px-5">
-            <h3 className="font-semibold text-gray-500 mb-2 uppercase ">
-              Lejos
-            </h3>
-            <div className="w-full flex items-end mb-8">
-              <div className="">
-                <p className="h-[34.81px] pr-2 font-semibold text-gray-500 text-center">
-                  OD
-                </p>
-                <p className="h-[34.81px] pr-2 font-semibold text-gray-500 text-center">
-                  OI
-                </p>
-              </div>
-              <table className="rounded-lg bg-white text-center border-2 table-fixed  border-separate lg:border-collapse h-[6.5rem]">
-                <thead className="border-2">
-                  <tr>
-                    <th className="border">Esfera</th>
-                    <th className="border">Cilindro</th>
-                    <th className="border">Eje</th>
-                    <th className="border">A/Y</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          setEsferaODLejos(e.target.value)
-                        }
-                        value={esferaODlejos}
-                      />
-                    </td>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          setCilindroODlejos(e.target.value)
-                        }
-                        value={cilindroODlejos}
-                      />
-                    </td>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          setEjeODlejos(e.target.value)
-                        }
-                        value={ejeODlejos}
-                      />
-                    </td>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          !medidasEncontradas &&
-                          setAgudezavisualODlejos(e.target.value)
-                        }
-                        value={agudezavisualODlejos}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          setEsferaOIlejos(e.target.value)
-                        }
-                        value={esferaOIlejos}
-                      />
-                    </td>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          setCilindroOIlejos(e.target.value)
-                        }
-                        value={cilindroOIlejos}
-                      />
-                    </td>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          setEjeOIlejos(e.target.value)
-                        }
-                        value={ejeOIlejos}
-                      />
-                    </td>
-                    <td className="border">
-                      <input
-                        type="text"
-                        className="text-center w-full h-full"
-                        onChange={(e) =>
-                          setAgudezavisualOIlejos(e.target.value)
-                        }
-                        value={agudezavisualOIlejos}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className=" flex flex-col items-center justify-center mt-5">
-              <h3 className="font-semibold text-gray-500 mb-2 uppercase ">
-                Cerca
-              </h3>
-              <div className="w-full flex items-end mb-8">
-                <div className="">
-                  <p className="h-[34.81px] pr-2 font-semibold text-gray-500 text-center">
-                    OD
-                  </p>
-                  <p className="h-[34.81px] pr-2 font-semibold text-gray-500 text-center">
-                    OI
-                  </p>
-                </div>
-                <table className="rounded-lg bg-white text-center border-2 table-fixed  border-separate lg:border-collapse h-[6.5rem]">
-                  <thead className="border-2">
-                    <tr>
-                      <th className="border">Esfera</th>
-                      <th className="border">Cilindro</th>
-                      <th className="border">Eje</th>
-                      <th className="border">A/Y</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            setEsferaODcerca(e.target.value)
-                          }
-                          value={esferaODcerca}
-                        />
-                      </td>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            setCilindroODcerca(e.target.value)
-                          }
-                          value={cilindroODcerca}
-                        />
-                      </td>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            setEjeODcerca(e.target.value)
-                          }
-                          value={ejeODcerca}
-                        />
-                      </td>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            !medidasEncontradas &&
-                            setAgudezavisualODcerca(e.target.value)
-                          }
-                          value={agudezavisualODcerca}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            setEsferaOIcerca(e.target.value)
-                          }
-                          value={esferaOIcerca}
-                        />
-                      </td>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            setCilindroOIcerca(e.target.value)
-                          }
-                          value={cilindroOIcerca}
-                        />
-                      </td>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            setEjeOIcerca(e.target.value)
-                          }
-                          value={ejeOIcerca}
-                        />
-                      </td>
-                      <td className="border">
-                        <input
-                          type="text"
-                          className="text-center w-full h-full"
-                          onChange={(e) =>
-                            !medidasEncontradas &&
-                            setAgudezavisualOIcerca(e.target.value)
-                          }
-                          value={agudezavisualOIcerca}
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <TablaMedidas 
+            esferaODlejos={esferaODlejos}
+            setEsferaODLejos={setEsferaODLejos}
+            cilindroODlejos={cilindroODlejos}
+            setCilindroODlejos={setCilindroODlejos}
+            ejeODlejos={ejeODlejos}
+            setEjeODlejos={setEjeODlejos}
+            agudezavisualODlejos={agudezavisualODlejos}
+            setAgudezavisualODlejos={setAgudezavisualODlejos}
+            esferaOIlejos={esferaOIlejos}
+            setEsferaOIlejos={setEsferaOIlejos}
+            cilindroOIlejos={cilindroOIlejos}
+            setCilindroOIlejos={setCilindroOIlejos}
+            ejeOIlejos={ejeOIlejos}
+            setEjeOIlejos={setEjeOIlejos}
+            agudezavisualOIlejos={agudezavisualOIlejos}
+            setAgudezavisualOIlejos={setAgudezavisualOIlejos}
+            esferaODcerca={esferaODcerca}
+            setEsferaODcerca={setEsferaODcerca}
+            cilindroODcerca={cilindroODcerca}
+            setCilindroODcerca={setCilindroODcerca}
+            ejeODcerca={ejeODcerca}
+            setEjeODcerca={setEjeODcerca}
+            agudezavisualODcerca={agudezavisualODcerca}
+            setAgudezavisualODcerca={setAgudezavisualODcerca}
+            esferaOIcerca={esferaOIcerca}
+            setEsferaOIcerca={setEsferaOIcerca}
+            cilindroOIcerca={cilindroOIcerca}
+            setCilindroOIcerca={setCilindroOIcerca}
+            ejeOIcerca={ejeOIcerca}
+            setEjeOIcerca={setEjeOIcerca}
+            agudezavisualOIcerca={agudezavisualOIcerca}
+            setAgudezavisualOIcerca={setAgudezavisualOIcerca}
+          />
+
           <button type="submit" className="rounded-md w-full py-3 mt-10 bg-slate-700 hover:bg-slate-800 text-white font-semibold uppercase ">
             Emitir Prescripción
           </button>
@@ -477,6 +313,9 @@ export const Prescripcion = () => {
           direccion={direccion}
           setDireccion={setDireccion}
         />
+      )}
+      {openModalPrescripcion && (
+        <ModalPrescripcion setOpenModalPrescripcion={setOpenModalPrescripcion}/>
       )}
     </div>
   );
