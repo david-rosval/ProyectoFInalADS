@@ -1,8 +1,11 @@
 import React from 'react'
+import CatalogoMonturaCard from './components/CatalogoMonturaCard'
 
 const Catalogo = () => {
   return (
-    <div>Catalogo</div>
+    <div>
+        <CatalogoMonturaCard />
+    </div>
   )
 }
 
