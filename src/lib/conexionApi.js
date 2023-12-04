@@ -18,7 +18,9 @@ export const registrarPost = async (endpoint, data) => {
     return res
 }
 
-export const obtenerLike = async (endpoint, dato, funcionSet) => {
+
+
+export const obtenerEspecifico = async (endpoint, dato, funcionSet) => {
     const response = await fetch(`${url}/${endpoint}`, {
         method: 'POST',
         headers: {

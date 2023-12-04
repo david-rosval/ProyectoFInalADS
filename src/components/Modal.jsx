@@ -82,13 +82,17 @@ const Modal = ({
                 onClick={(e) => {
                   e.preventDefault();
                   const nuevoCliente = {
-                    "nombres_y_apellidos": nombresYApellidos,
-                    "edad": edad,
-                    "telefono": telefono,
-                    "direccion": direccion
-                  }
+                    nombres_y_apellidos: nombresYApellidos,
+                    edad: edad,
+                    telefono: telefono,
+                    direccion: direccion,
+                  };
                   registrarPost("clientes", nuevoCliente);
                   setOpenModal(false);
+                  setNombresYApellidos("");
+                  setEdad("");
+                  setTelefono("");
+                  setDireccion("");
                 }}
               >
                 Agregar cliente
@@ -100,9 +104,12 @@ const Modal = ({
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenModal(false);
+                  setNombresYApellidos("");
+                  setEdad("");
+                  setTelefono("");
+                  setDireccion("");
                 }}
               >
-                {" "}
                 Cancelar
               </button>
             </div>

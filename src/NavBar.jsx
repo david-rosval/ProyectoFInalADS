@@ -1,30 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const NavBar = () => {
   return (
-    <header className="w-4/5">
-      <h1 className="text-5xl font-extrabold mt-20 mb-20 text-center">
-        Óptica Arte Visual
-      </h1>
-      <nav>
-        <ul className="flex flex-row justify-center text-xl">
-          
-          <Link className="w-1/3 text-center" to="/">
-            <li className="hover:bg-slate-700 hover:text-white py-2 hover:font-semibold">
+    <header className="w-full ">
+      <div className="bg-slate-500 text-white text-center pt-20 pb-10">
+        <h1 className="text-5xl font-semibold ">Óptica Arte Visual</h1>
+        <p className="mt-5">La mejor calidad en monturas con modelos exclusivos y resinas de alta calidad</p>
+      </div>
+      <nav className="bg-slate-700">
+        <ul id="nav-ul" className="flex flex-row justify-center text-xl">
+          <NavLink className="w-1/3 text-center" to="/">
+            <li className="hover:bg-slate-800 text-white py-2 hover:font-semibold">
               Home
             </li>
-          </Link>
-          <Link className="w-1/3 text-center" to="/pedidos">
-            <li className="hover:bg-slate-700 hover:text-white py-2 hover:font-semibold">
+          </NavLink>
+          <NavLink className="w-1/3 text-center" to="/pedidos">
+            <li className="hover:bg-slate-800 text-white py-2 hover:font-semibold">
               Pedidos
             </li>
-          </Link>
-          <Link className="w-1/3 text-center" to="/prescripcion">
-            <li className="hover:bg-slate-700 hover:text-white py-2 hover:font-semibold">
+          </NavLink>
+          <NavLink className="w-1/3 text-center" to="/prescripcion">
+            <li className="hover:bg-slate-800 text-white py-2 hover:font-semibold">
               Emitir Prescripción
             </li>
-          </Link>
+          </NavLink>
         </ul>
       </nav>
     </header>
