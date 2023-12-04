@@ -1,6 +1,7 @@
 import React from "react";
 import DetalleTablaMedidas from "./DetalleTablaMedidas";
 import DetalleClienteModalPrescripcion from "./DetalleClienteModalPrescripcion";
+import { registrarPost } from "../lib/conexionApi";
 
 const ModalPrescripcion = ({
   setOpenModalPrescripcion,
@@ -10,7 +11,8 @@ const ModalPrescripcion = ({
   fechaFormateada,
   notaAdicional,
   setActualizacionMedidas,
-  setAsignacionNuevasMedidas
+  setAsignacionNuevasMedidas,
+  setPrescripcionRegistrada
 }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
@@ -53,22 +55,24 @@ const ModalPrescripcion = ({
             >
               No
             </button>
-            <button
-              type="submit"
-              className="cursor-pointer py-2 w-1/2 bg-slate-700 hover:bg-slate-800 text-white font-semibold text-center rounded-md mt-2"
-              onClick={(e) => {
-                e.preventDefault();
-                const registroPrescripcion = {
-                  "id_medidas": medidas[0]["id_medidas"],
-                  "detalle_lunas": notaAdicional,
-                  "fecha": fechaFormateada,
-                }
-                setPrescripcionLista(true)
-                
-              }}
-            >
-              Sí
-            </button>
+            
+              <button
+                type="submit"
+                className="w-1/2 mt-2 cursor-pointer py-2  bg-slate-700 hover:bg-slate-800 text-white font-semibold text-center rounded-md "
+                onClick={(e) => {
+                  e.preventDefault();
+                  const nuevaPrescripcion = {         
+                    "id_medidas": medidas[0]["id_medidas"],
+                    "detalle_lunas": notaAdicional,
+                    "fecha": fechaFormateada,
+                  };
+          
+                  registrarPost('prescripciones', nuevaPrescripcion)
+                  setPrescripcionRegistrada(true)               
+                }}
+                >
+                Sí
+              </button>
           </div>
         </form>
       </div>

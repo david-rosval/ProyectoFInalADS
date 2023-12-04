@@ -1,12 +1,8 @@
 import React from 'react'
 import CatalogoMonturaCard from './components/CatalogoMonturaCard'
 
-const Catalogo = () => {
+export  const Catalogo = () => {
   return (
-    <div>
-        <CatalogoMonturaCard />
-    </div>
+    <CatalogoMonturaCard/>
   )
 }
-
-export default Catalogo

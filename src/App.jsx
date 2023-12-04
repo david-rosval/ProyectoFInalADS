@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { NavBar } from "./NavBar";
 import { Prescripcion } from "./Prescripcion";
-import Catalogo from "./Catalogo";
+import { Catalogo } from "./Catalogo";
 import { useState } from "react";
 
 const Home = () => {
@@ -14,15 +14,13 @@ const Pedidos = () => {
 
 export default function App() {
 
-  const [prescripcion, setPrescripcion] = useState([])
-
   return (
     <div className="flex flex-col items-center h-screen">
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pedidos" element={<Pedidos />} />
-        <Route path="/prescripcion" element={<Prescripcion setPrescripcion={setPrescripcion} />} />
+        <Route path="/prescripcion" element={<Prescripcion />} />
         <Route path="/catalogo" element={<Catalogo />} />
       </Routes>
     </div>

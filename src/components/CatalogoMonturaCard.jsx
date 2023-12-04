@@ -1,8 +1,7 @@
-import React from 'react'
 
 const CatalogoMonturaCard = () => {
   return (
-    <div>CatalogoMonturaCard</div>
+    <div>montura</div>
   )
 }
 

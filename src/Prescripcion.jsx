@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { actualizarPut, obtenerEspecifico, registrarPost } from "./lib/conexionApi";
+import { actualizarPut, cargarApi, obtenerEspecifico, registrarPost } from "./lib/conexionApi";
 import Modal from "./components/Modal";
 import ModalPrescripcion from "./components/ModalPrescripcion";
 import TablaMedidas from "./components/TablaMedidas";
 import BarraBusquedaCliente from "./components/BarraBusquedaCliente";
 import DatosCliente from "./components/DatosCliente";
+import { Navigate } from "react-router-dom";
+import ErrorMessage from "./components/ErrorMessage";
 
 const fecha = new Date();
 let dia = fecha.getDate();
@@ -18,7 +20,7 @@ if (mes < 10) mes = '0' + mes;
 const fechaFormateada = dia + '/' + mes + '/' + año;
 
 
-export const Prescripcion = ({setPrescripcion}) => {
+export const Prescripcion = () => {
   // States para la búsqueda de clientes
   const [clienteBusqueda, setClienteBusqueda] = useState("");
   const [btnBuscarClick, setBtnBuscarClick] = useState(false);
@@ -62,34 +64,44 @@ export const Prescripcion = ({setPrescripcion}) => {
   // States para crear nueva prescripción
   const [notaAdicional, setNotaAdicional] = useState("");
   const [prescripcionLista, setPrescripcionLista] = useState(false)
+  const [prescripcionRegistrada, setPrescripcionRegistrada] = useState(false)
+
+  // errores
+  const [error, setError] = useState(false)
+
+
+  useEffect(() => {
+    cargarApi()
+  }, []);
 
   useEffect(() => {
     if (btnBuscarClick) {
       obtenerEspecifico(
         "clientes/busqueda",
         { nombres_y_apellidos: clienteBusqueda },
-        setClientes
+        setClientes, setError
       );
+      
     } else return;
   }, [btnBuscarClick]);
 
   useEffect(() => {
-    if (Object.keys(cliente).length !== 0 && asignacionNuevasMedidas) {
+    if (Object.keys(cliente).length !== 0 || asignacionNuevasMedidas) {
       obtenerEspecifico(
         "medidas/busqueda",
-        { id_cliente: parseInt(cliente["id_cliente"]) },
-        setMedidas
+        { "id_cliente": parseInt(cliente["id_cliente"]) },
+        setMedidas, setError
       );
       console.log('medidas encontradas');
     } else return;
   }, [cliente, asignacionNuevasMedidas]);
 
    useEffect(() => {
-    if (Object.keys(cliente).length !== 0 && actualizacionMedidas) {
+    if (Object.keys(cliente).length !== 0 || actualizacionMedidas) {
       obtenerEspecifico(
         "medidas/busqueda",
-        { id_cliente: parseInt(cliente["id_cliente"]) },
-        setMedidas
+        { "id_cliente": parseInt(cliente["id_cliente"]) },
+        setMedidas, setError
       );
       console.log('medidas encontradas');
     } else return
@@ -136,25 +148,9 @@ export const Prescripcion = ({setPrescripcion}) => {
       setAgudezavisualOIcerca(0);
     }
   }, [medidas]);
-
-  useEffect(() => {
-    if (medidas.length !== 0) {
-      const nuevaPrescripcion = {
-        "id_medidas": medidas[0]["id_medidas"],
-        "detalle_lunas": notaAdicional,
-        "fecha": fechaFormateada,
-      }
-      if (prescripcionLista) {
-        registrarPost('prescripciones', nuevaPrescripcion)
-        console.log('prescripcion registrada');
-      } else {
-        console.log('no se ha emitido prescripcion');
-      }
-    }
-  }, [prescripcionLista])
+   
 
   const handleButtonBuscarCliente = (e) => {
-    
     e.preventDefault();
     if (clienteBusqueda !== "") {
       setBtnBuscarClick(true);
@@ -225,70 +221,77 @@ export const Prescripcion = ({setPrescripcion}) => {
 
   return (
     <div className=" w-3/5 flex flex-row my-5 p-5 h-auto">
-      <div className="w-2/5 pr-5">
-        {/* BARRA DE BÚSQUEDA DE CLIENTE */}
-        <BarraBusquedaCliente 
-        clienteBusqueda = {clienteBusqueda}
-        setClienteBusqueda = {setClienteBusqueda}
-        setBtnBuscarClick = {setBtnBuscarClick}
-        setAsignacionNuevasMedidas = {setAsignacionNuevasMedidas}
-        handleButtonBuscarCliente = {handleButtonBuscarCliente}
-        />
+      <div className="w-2/5">
+        {btnBuscarClick && error && <ErrorMessage mensaje={'No se encontraron resultados'}/>}
+        <div className=" flex flex-row">
+          <div className="w-full pr-5">
+            {/* BARRA DE BÚSQUEDA DE CLIENTE */}
+            <BarraBusquedaCliente 
+            clienteBusqueda = {clienteBusqueda}
+            setClienteBusqueda = {setClienteBusqueda}
+            setBtnBuscarClick = {setBtnBuscarClick}
+            setAsignacionNuevasMedidas = {setAsignacionNuevasMedidas}
+            handleButtonBuscarCliente = {handleButtonBuscarCliente}
+            setError = {setError}
+            />
 
-        {/* DROPDOWN DE CLIENTES ENCONTRADOS */}
-     
+            {/* DROPDOWN DE CLIENTES ENCONTRADOS */}
+        
 
 
-          {clientes && clienteBusqueda !== "" && btnBuscarClick !== false
-            ? <ul>
-              {clientes.map((cli) => {
-                return (
-                <li
-                  key={cli["id_cliente"]}
-                  onClick={() => {
-                    setBtnBuscarClick(false);
-                    setClienteBusqueda("");
-                    setCliente(cli);
-                    setNotaAdicional("");
-                  }}
-                  className="cursor-pointer hover:font-semibold hover:bg-slate-50 p-2 "
-                >
-                  <p>{cli["nombres_y_apellidos"]}</p>
-                  <p className="text-sm text-slate-400">{cli["edad"]}</p>
-                  <p className="text-sm text-slate-400">{cli["telefono"]}</p>
-                  <p className="text-sm text-slate-400">{cli["direccion"]}</p>
-                </li>
-                );
-              })}
-            </ul>
-            : ""}
-      
+              {clientes && clienteBusqueda !== "" && btnBuscarClick !== false
+                ? <ul>
+                  {clientes.map((cli) => {
+                    return (
+                      <li
+                      key={cli["id_cliente"]}
+                      onClick={() => {
+                        setBtnBuscarClick(false);
+                        setClienteBusqueda("");
+                        setCliente(cli);
+                        setNotaAdicional("");
+                      }}
+                      className="cursor-pointer hover:font-semibold hover:bg-slate-50 p-2 "
+                      >
+                      <p>{cli["nombres_y_apellidos"]}</p>
+                      <p className="text-sm text-slate-400">{cli["edad"]}</p>
+                      <p className="text-sm text-slate-400">{cli["telefono"]}</p>
+                      <p className="text-sm text-slate-400">{cli["direccion"]}</p>
+                    </li>
+                    );
+                  })}
+                </ul>
+                : ""}
+          
+          </div>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="icon icon-tabler icon-tabler-user-plus cursor-pointer hover:stroke-slate-800 mr-5"
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
+            strokeWidth="2.5"
+            stroke="#334155"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            /* ABRIR MODAL PARA AGREGAR CLIENTE */
+            onClick={() => {
+              console.log("agregar");
+              setOpenModal(true);
+            }}
+            >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+            <path d="M16 19h6" />
+            <path d="M19 16v6" />
+            <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+          </svg>
+
+        </div>
       </div>
-
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="icon icon-tabler icon-tabler-user-plus cursor-pointer hover:stroke-slate-800 mr-5"
-        width="40"
-        height="40"
-        viewBox="0 0 24 24"
-        strokeWidth="2.5"
-        stroke="#334155"
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        /* ABRIR MODAL PARA AGREGAR CLIENTE */
-        onClick={() => {
-          console.log("agregar");
-          setOpenModal(true);
-        }}
-      >
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-        <path d="M16 19h6" />
-        <path d="M19 16v6" />
-        <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-      </svg>
-
+        
       {/* MOSTRAR CLIENTE SELECCIONADO */}
       {Object.keys(cliente).length !== 0 ? (
         <form onSubmit={handleSubmitEmitirPrescripcion} className="px-5  flex flex-col w-3/5 h-full pb-5 border-l-2">
@@ -375,8 +378,13 @@ export const Prescripcion = ({setPrescripcion}) => {
         notaAdicional={notaAdicional}
         setActualizacionMedidas={setActualizacionMedidas}
         setAsignacionNuevasMedidas={setAsignacionNuevasMedidas}
+        setPrescripcionRegistrada={setPrescripcionRegistrada}
         />
       )}
+      {prescripcionRegistrada && (
+        <Navigate to="/catalogo" replace={true} />
+      )}
+      
     </div>
   );
 }

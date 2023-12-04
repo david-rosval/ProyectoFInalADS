@@ -1,4 +1,12 @@
-const url = 'https://jairodanielmt-opticaads.hf.space'
+const url = 'https://jairodanielmt-mejorasadsoptica.hf.space'
+
+export const cargarApi = async () => {
+    const response = await fetch(url)
+    if (response.ok) {
+        const data = await response.json()
+        console.log(data);
+    }
+}
 
 export const obtenerGet = async (endpoint) => {
     const response = await fetch(`${url}/${endpoint}`)
@@ -18,7 +26,7 @@ export const registrarPost = async (endpoint, data) => {
     return res
 }
 
-export const obtenerEspecifico = async (endpoint, dato, funcionSet) => {
+export const obtenerEspecifico = async (endpoint, dato, funcionSet, funcionSetError) => {
     const response = await fetch(`${url}/${endpoint}`, {
         method: 'POST',
         headers: {
@@ -28,6 +36,9 @@ export const obtenerEspecifico = async (endpoint, dato, funcionSet) => {
     })
     const data = await response.json()
     funcionSet(data)
+    if (data.error || data.length === 0) {
+        funcionSetError(true)
+    }
 }
 
 export const actualizarPut = async (endpoint, data) => {

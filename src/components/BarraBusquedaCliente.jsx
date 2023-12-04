@@ -6,6 +6,7 @@ const BarraBusquedaCliente = ({
     setBtnBuscarClick,
     setAsignacionNuevasMedidas,
     handleButtonBuscarCliente,
+    setError
 }) => {
   return (
     <li className="flex flex-row gap-2 mb-2">
@@ -18,6 +19,7 @@ const BarraBusquedaCliente = ({
           setClienteBusqueda(e.target.value);
           setBtnBuscarClick(false);
           setAsignacionNuevasMedidas(false);
+          setError(false)
         }}
         value={clienteBusqueda}
       />
