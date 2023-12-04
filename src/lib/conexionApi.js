@@ -30,3 +30,14 @@ export const obtenerEspecifico = async (endpoint, dato, funcionSet) => {
     funcionSet(data)
 }
 
+export const actualizarPut = async (endpoint, data) => {
+    const response = await fetch(`${url}/${endpoint}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    const res = await response.json()
+    return res
+}

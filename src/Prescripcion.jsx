@@ -152,31 +152,37 @@ export const Prescripcion = ({setPrescripcion}) => {
 
   const handleSubmitEmitirPrescripcion = (e) => {
     e.preventDefault()
+    const nuevoMonturas = {
+      "Esfera_OD_lejos": parseFloat(esferaODlejos),
+      "Cilindro_OD_lejos": parseFloat(cilindroODlejos),
+      "Eje_OD_lejos": parseFloat(ejeODlejos),
+      "Agudeza_visual_OD_lejos": parseFloat(agudezavisualODlejos),
+      "Esfera_OI_lejos": parseFloat(esferaOIlejos),
+      "Cilindro_OI_lejos": parseFloat(cilindroOIlejos),
+      "Eje_OI_lejos": parseFloat(ejeOIlejos),
+      "Agudeza_visual_OI_lejos": parseFloat(agudezavisualOIlejos),
+      "Esfera_OD_cerca": parseFloat(esferaODcerca),
+      "Cilindro_OD_cerca": parseFloat(cilindroODcerca),
+      "Eje_OD_cerca": parseFloat(ejeODcerca),
+      "Agudeza_visual_OD_cerca": parseFloat(agudezavisualODcerca),
+      "Esfera_OI_cerca": parseFloat(esferaOIcerca),
+      "Cilindro_OI_cerca": parseFloat(cilindroOIcerca),
+      "Eje_OI_cerca": parseFloat(ejeOIcerca),
+      "Agudeza_visual_OI_cerca": parseFloat(agudezavisualOIcerca),
+      "id_cliente": cliente["id_cliente"],
+    };
     if (!medidasEncontradas && Object.keys(cliente).length !== 0) {
-      const nuevoMonturas = {
-        "Esfera_OD_lejos": parseFloat(esferaODlejos),
-        "Cilindro_OD_lejos": parseFloat(cilindroODlejos),
-        "Eje_OD_lejos": parseFloat(ejeODlejos),
-        "Agudeza_visual_OD_lejos": parseFloat(agudezavisualODlejos),
-        "Esfera_OI_lejos": parseFloat(esferaOIlejos),
-        "Cilindro_OI_lejos": parseFloat(cilindroOIlejos),
-        "Eje_OI_lejos": parseFloat(ejeOIlejos),
-        "Agudeza_visual_OI_lejos": parseFloat(agudezavisualOIlejos),
-        "Esfera_OD_cerca": parseFloat(esferaODcerca),
-        "Cilindro_OD_cerca": parseFloat(cilindroODcerca),
-        "Eje_OD_cerca": parseFloat(ejeODcerca),
-        "Agudeza_visual_OD_cerca": parseFloat(agudezavisualODcerca),
-        "Esfera_OI_cerca": parseFloat(esferaOIcerca),
-        "Cilindro_OI_cerca": parseFloat(cilindroOIcerca),
-        "Eje_OI_cerca": parseFloat(ejeOIcerca),
-        "Agudeza_visual_OI_cerca": parseFloat(agudezavisualOIcerca),
-        "id_cliente": cliente["id_cliente"],
-      };
 
       registrarPost('medidas', nuevoMonturas)
       console.log('medidas registradas');
       setAsignacionNuevasMedidas(true)
       console.log('medidas encontradas');
+    } else {
+      if (medidasEncontradas && Object.keys(cliente).length !== 0) {
+
+      }
+
+
     }
 
     setOpenModalPrescripcion(true)
@@ -315,8 +321,14 @@ export const Prescripcion = ({setPrescripcion}) => {
         />
       )}
       {openModalPrescripcion && (
-        <ModalPrescripcion setOpenModalPrescripcion={setOpenModalPrescripcion}/>
+        <ModalPrescripcion 
+        setOpenModalPrescripcion={setOpenModalPrescripcion} setPrescripcion={setPrescripcion}
+        cliente={cliente}
+        medidas={medidas}
+        fechaFormateada={fechaFormateada}
+        notaAdicional={notaAdicional}
+        />
       )}
     </div>
   );
-};
+}
