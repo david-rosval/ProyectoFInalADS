@@ -16,7 +16,7 @@ export const CarritoItem = ({carritoItem, setCarrito}) => {
         </div>
         <div className='block w-[350px]'>
             <p className='truncate uppercase text-xl font-semibold'>{carritoItem["montura"]["nombre_montura"]}</p>
-            <p className='mb-3'>{carritoItem["montura"]["marca"]}</p>
+            <p className='mb-3 text-gray-500'>{carritoItem["montura"]["marca"]}</p>
             <p>Material: <span className='uppercase'>{carritoItem["montura"]["material"]}</span></p>
             <p>Color:  <span className='uppercase'>{carritoItem["montura"]["color"]}</span></p>
         </div>
@@ -36,7 +36,7 @@ export const CarritoItem = ({carritoItem, setCarrito}) => {
                 console.log(carritoItem);
             }}>+</button>
         </div>
-        <div className='w-[80px] text-center'>S/.{cantidad*carritoItem["monturaInventario"]["precio_unit"]}</div>
+        <div className='w-[80px] text-center text-sm font-semibold'>S/. <span className='text-2xl'>{cantidad*carritoItem["monturaInventario"]["precio_unit"]}</span></div>
     </div>
   )
 }
