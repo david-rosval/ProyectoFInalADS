@@ -1,4 +1,4 @@
-const url = import.meta.env.VITE_API_URL
+const url = "https://jairodanielmt-mejorasadsoptica.hf.space/"
 
 export const cargarApi = async () => {
     const response = await fetch(url)
