@@ -222,7 +222,7 @@ export const Prescripcion = () => {
   return (
     <div className=" w-3/5 flex flex-row my-5 p-5 h-auto">
       <div className="w-2/5">
-        {btnBuscarClick && error && <ErrorMessage mensaje={'No se encontraron resultados'}/>}
+        {(btnBuscarClick && error) && <ErrorMessage mensaje={'No se encontraron resultados'}/>}
         <div className=" flex flex-row">
           <div className="w-full pr-5">
             {/* BARRA DE BÚSQUEDA DE CLIENTE */}
@@ -366,6 +366,8 @@ export const Prescripcion = () => {
           setTelefono={setTelefono}
           direccion={direccion}
           setDireccion={setDireccion}
+          setError={setError}
+          setClienteBusqueda={setClienteBusqueda}
         />
       )}
       {openModalPrescripcion && (

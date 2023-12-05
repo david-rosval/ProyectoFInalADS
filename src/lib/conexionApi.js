@@ -8,10 +8,13 @@ export const cargarApi = async () => {
     }
 }
 
-export const obtenerGet = async (endpoint) => {
+export const obtenerGet = async (endpoint, funcionSet, funcionSetError) => {
     const response = await fetch(`${url}/${endpoint}`)
     const data = await response.json()
-    return data
+    if (data.error || data.length === 0) {
+        funcionSetError(true)
+    }
+    funcionSet(data)
 }
 
 export const registrarPost = async (endpoint, data) => {
@@ -58,3 +61,8 @@ export const getEspecifico = async (endpoint, dato) => {
     const data = await response.json()
     return data
 } 
+
+export const emitirPdfPrescripcion = (idPrescripcion) => {
+    const urlPdf = `${url}/prescripcion/pdf/${idPrescripcion}` 
+    return urlPdf
+}

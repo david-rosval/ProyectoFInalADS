@@ -12,6 +12,8 @@ const Modal = ({
   setTelefono,
   direccion,
   setDireccion,
+  setError,
+  setClienteBusqueda
 }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
@@ -93,6 +95,8 @@ const Modal = ({
                   setEdad("");
                   setTelefono("");
                   setDireccion("");
+                  setError(false);
+                  setClienteBusqueda("");
                 }}
               >
                 Agregar cliente
@@ -108,6 +112,7 @@ const Modal = ({
                   setEdad("");
                   setTelefono("");
                   setDireccion("");
+                  setClienteBusqueda("");
                 }}
               >
                 Cancelar
