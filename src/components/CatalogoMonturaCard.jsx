@@ -56,10 +56,9 @@ const CatalogoMonturaCard = ({
                 setMonturaInventario(monturaInventario);
                 setModalVerCarrito(true)
                 setCarrito([...carrito, {
-                  "id_montura_inventario":monturaInventario["id_montura_inventario"],
+                  "montura":montura,
+                  "monturaInventario":monturaInventario,
                   "cantidad":1,
-                  "precio":monturaInventario["precio_unit"],
-                  "id_boleta": NaN
                 }])
               }}
             >

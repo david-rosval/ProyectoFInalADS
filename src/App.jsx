@@ -2,8 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import { NavBar } from "./NavBar";
 import { Prescripcion } from "./Prescripcion";
 import { Catalogo } from "./Catalogo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Carrito } from "./Carrito";
+import { obtenerGet } from "./lib/conexionApi";
 
 const Home = () => {
   return <div>Home</div>;
@@ -16,6 +17,11 @@ const Pedidos = () => {
 export default function App() {
 
   const [carrito, setCarrito] = useState([])
+  const [monturas, setMonturas] = useState([]);
+  const [errorConsultaMonturas, setsetErrorConsultaMonturas] = useState(false);
+  useEffect(() => {
+    obtenerGet("monturas", setMonturas, setsetErrorConsultaMonturas);
+  }, []);
 
   return (
     <div className="flex flex-col items-center h-screen">
@@ -24,8 +30,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/pedidos" element={<Pedidos />} />
         <Route path="/prescripcion" element={<Prescripcion />} />
-        <Route path="/catalogo" element={<Catalogo setCarrito={setCarrito} carrito={carrito}/>} />
-        <Route path="/carrito" element={<Carrito setCarrito={setCarrito} carrito={carrito}/>} />
+        <Route path="/catalogo" element={<Catalogo setCarrito={setCarrito} carrito={carrito} monturas={monturas} setMonturas={setMonturas}/>} />
+        <Route path="/carrito" element={<Carrito setCarrito={setCarrito} carrito={carrito}/>} monturas={monturas} />
       </Routes>
     </div>
   );

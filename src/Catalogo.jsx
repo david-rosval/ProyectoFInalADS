@@ -9,16 +9,15 @@ import {
 } from "./lib/conexionApi";
 import ModalVerCarrito from "./components/ModalVerCarrito";
 
-export const Catalogo = ({ setCarrito, carrito }) => {
+export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas }) => {
   // Se obtienen primero los detalles de cada montura
-  const [monturas, setMonturas] = useState([]);
+  
   // se obtienen los datos de precio, stock y código
   const [monturasInventario, setmonturasInventario] = useState([]);
 
   const [montura, setMontura] = useState({})
   const [monturaInventario, setMonturaInventario] = useState({})
 
-  const [errorConsultaMonturas, setsetErrorConsultaMonturas] = useState(false);
   const [errorConsultaMonturasInv, setsetErrorConsultaMonturasInv] =
     useState(false);
 
@@ -27,9 +26,7 @@ export const Catalogo = ({ setCarrito, carrito }) => {
   const [modalVerCarrito, setModalVerCarrito] = useState(false)
 
   // obtener detalle de monturas
-  useEffect(() => {
-    obtenerGet("monturas", setMonturas, setsetErrorConsultaMonturas);
-  }, []);
+  
   // obtener catalogo de monturas
   useEffect(() => {
     obtenerGet(
