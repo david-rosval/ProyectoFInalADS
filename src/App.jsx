@@ -19,6 +19,7 @@ export default function App() {
   const [carrito, setCarrito] = useState([])
   const [monturas, setMonturas] = useState([]);
   const [errorConsultaMonturas, setsetErrorConsultaMonturas] = useState(false);
+  const [precioTotal, setPrecioTotal] = useState(0)
   useEffect(() => {
     obtenerGet("monturas", setMonturas, setsetErrorConsultaMonturas);
   }, []);
@@ -31,7 +32,7 @@ export default function App() {
         <Route path="/pedidos" element={<Pedidos />} />
         <Route path="/prescripcion" element={<Prescripcion />} />
         <Route path="/catalogo" element={<Catalogo setCarrito={setCarrito} carrito={carrito} monturas={monturas} setMonturas={setMonturas}/>} />
-        <Route path="/carrito" element={<Carrito setCarrito={setCarrito} carrito={carrito}/>} monturas={monturas} />
+        <Route path="/carrito" element={<Carrito setCarrito={setCarrito} carrito={carrito}/>} monturas={monturas} precioTotal={precioTotal} setPrecioTotal={setPrecioTotal}/>
       </Routes>
     </div>
   );

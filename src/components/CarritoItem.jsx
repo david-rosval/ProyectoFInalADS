@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { formatearStringUrlImagen } from '../lib/funciones'
 
-export const CarritoItem = ({carritoItem, setCarrito}) => {
+export const CarritoItem = ({carritoItem, setCarrito, precioTotal, setPrecioTotal}) => {
 
     const imagen = carritoItem["montura"]["imagen"]
 

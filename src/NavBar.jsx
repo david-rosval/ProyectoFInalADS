@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 export const NavBar = () => {
   return (
-    <header className="w-full ">
+    <header className="w-full mb-10">
       <div className="bg-slate-500 text-white text-center pt-20 pb-10">
         <h1 className="text-4xl font-semibold ">Óptica Arte Visual</h1>
         <p className="mt-5">La mejor calidad en monturas con modelos exclusivos y resinas de alta calidad</p>
