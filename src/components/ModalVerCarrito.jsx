@@ -21,7 +21,8 @@ const ModalVerCarrito = ({
   setModalVerCarrito,
   carrito,
   setMontura,
-  setMonturaInventario
+  setMonturaInventario,
+  setIrAlCarrito
 }) => {
   const { src, alt, border } = formatearStringUrlImagen(montura["imagen"]);
 
@@ -72,8 +73,8 @@ const ModalVerCarrito = ({
             </div>
           </div>
         </div>
-        <button className="w-full text-xl py-4 uppercase border-2 cursor-pointer border-black hover:bg-gray-300">
-          Ver Carrito {0}
+        <button className="w-full text-xl py-4 uppercase border-2 cursor-pointer border-black hover:bg-gray-300" onClick={() => setIrAlCarrito(true)} >
+          Ver Carrito ({carrito.length})
         </button>
       </div>
     </div>

@@ -8,8 +8,9 @@ import {
   obtenerGet,
 } from "./lib/conexionApi";
 import ModalVerCarrito from "./components/ModalVerCarrito";
+import { Navigate } from "react-router";
 
-export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas }) => {
+export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas, setPrecioTotal, setPrescripcion }) => {
   // Se obtienen primero los detalles de cada montura
   
   // se obtienen los datos de precio, stock y código
@@ -19,11 +20,16 @@ export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas }) => {
   const [monturaInventario, setMonturaInventario] = useState({})
 
   const [errorConsultaMonturasInv, setsetErrorConsultaMonturasInv] =
+    useState(false); 
+    
+  const [errorUltimaPrescripcion, setsetErrorUltimaPrescripcion] =
     useState(false);
 
   const [btnBuscarMonturaCodigo, setbtnBuscarMonturaCodigo] = useState(false);
 
   const [modalVerCarrito, setModalVerCarrito] = useState(false)
+
+  const [irAlCarrito, setIrAlCarrito] = useState(false)
 
   // obtener detalle de monturas
   
@@ -35,6 +41,12 @@ export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas }) => {
       setsetErrorConsultaMonturasInv
     );
   }, []);
+
+  useEffect(() => {
+    obtenerGet("prescripciones/ultimoregistro", setPrescripcion, setsetErrorUltimaPrescripcion);
+  }, []);
+
+
 
   return (
     <div className="mx-20 mt-5">
@@ -69,13 +81,19 @@ export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas }) => {
               setMonturaInventario={setMonturaInventario}
               setCarrito={setCarrito}
               carrito={carrito}
+              setPrecioTotal={setPrecioTotal}
             />
           );
         })}
       </div>
       {modalVerCarrito && (
-        <ModalVerCarrito montura={montura} monturaInventario={monturaInventario} setModalVerCarrito={setModalVerCarrito} setMontura={setMontura} setMonturaInventario={setMonturaInventario} />
+        <ModalVerCarrito montura={montura} monturaInventario={monturaInventario} setModalVerCarrito={setModalVerCarrito} carrito={carrito} setMontura={setMontura} setMonturaInventario={setMonturaInventario} setIrAlCarrito={setIrAlCarrito} />
       )}
+
+      {irAlCarrito && (
+        <Navigate to="/carrito" replace={true}/>
+      )}
+
     </div>
   );
 };

@@ -66,3 +66,4 @@ export const emitirPdfPrescripcion = (idPrescripcion) => {
     const urlPdf = `${url}/prescripcion/pdf/${idPrescripcion}` 
     return urlPdf
 }
+

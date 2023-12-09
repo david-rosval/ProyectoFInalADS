@@ -15,11 +15,11 @@ const Pedidos = () => {
 };
 
 export default function App() {
-
-  const [carrito, setCarrito] = useState([])
+  const [carrito, setCarrito] = useState([]);
   const [monturas, setMonturas] = useState([]);
   const [errorConsultaMonturas, setsetErrorConsultaMonturas] = useState(false);
-  const [precioTotal, setPrecioTotal] = useState(0)
+  const [precioTotal, setPrecioTotal] = useState(0);
+  const [prescripcion, setPrescripcion] = useState([]);
   useEffect(() => {
     obtenerGet("monturas", setMonturas, setsetErrorConsultaMonturas);
   }, []);
@@ -31,8 +31,30 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/pedidos" element={<Pedidos />} />
         <Route path="/prescripcion" element={<Prescripcion />} />
-        <Route path="/catalogo" element={<Catalogo setCarrito={setCarrito} carrito={carrito} monturas={monturas} setMonturas={setMonturas}/>} />
-        <Route path="/carrito" element={<Carrito setCarrito={setCarrito} carrito={carrito}/>} monturas={monturas} precioTotal={precioTotal} setPrecioTotal={setPrecioTotal}/>
+        <Route
+          path="/catalogo"
+          element={
+            <Catalogo
+              setCarrito={setCarrito}
+              carrito={carrito}
+              monturas={monturas}
+              setMonturas={setMonturas}
+              setPrecioTotal={setPrecioTotal}
+              setPrescripcion={setPrescripcion}
+            />
+          }
+        />
+        <Route
+          path="/carrito"
+          element={
+            <Carrito
+              setCarrito={setCarrito}
+              carrito={carrito}
+              precioTotal={precioTotal}
+              setPrecioTotal={setPrecioTotal}
+            />
+          }
+        />
       </Routes>
     </div>
   );

@@ -21,7 +21,8 @@ const CatalogoMonturaCard = ({
   setMontura,
   setMonturaInventario,
   setCarrito,
-  carrito
+  carrito,
+  setPrecioTotal
 }) => {
   const { src, alt, border } = formatearStringUrlImagen(montura["imagen"]);
 
@@ -60,6 +61,7 @@ const CatalogoMonturaCard = ({
                   "monturaInventario":monturaInventario,
                   "cantidad":1,
                 }])
+                
               }}
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
