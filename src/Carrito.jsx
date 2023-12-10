@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { CarritoItem } from './components/CarritoItem'
 import { actualizarPut, cargarApi, obtenerEspecifico, registrarPost, obtenerGet } from "./lib/conexionApi";
+import ModalBoleta from './components/ModalBoleta';
 
-export const Carrito = ({setCarrito, carrito, precioTotal, setPrecioTotal}) => {
+export const Carrito = ({setCarrito, carrito, precioTotal, setPrecioTotal, fecha}) => {
+
+  const [modalBoleta, setModalBoleta] = useState(false)
 
   useEffect(() => {
     setPrecioTotal(carrito.reduce((total, carritoItem) => total + (carritoItem["cantidad"]*carritoItem["monturaInventario"]["precio_unit"]), 0))
@@ -14,7 +17,7 @@ export const Carrito = ({setCarrito, carrito, precioTotal, setPrecioTotal}) => {
           <h1 className="my-10 text-4xl font-semibold text-center">Carrito de compras</h1>
           
           <button className='bg-slate-700 text-white my-8 rounded-lg hover:bg-slate-800 uppercase text-xl font-semibold px-5' onClick={()=>{
-
+            setModalBoleta(true)
           }}>
               Continuar S/. {precioTotal}
           </button>
@@ -24,6 +27,9 @@ export const Carrito = ({setCarrito, carrito, precioTotal, setPrecioTotal}) => {
                 return <CarritoItem key={item["monturaInventario"]["codigo"]} carritoItem={item} setCarrito={setCarrito} precioTotal={precioTotal} setPrecioTotal={setPrecioTotal} carrito={carrito} />
             })}
         </div>
+        {(modalBoleta && precioTotal !== 0) && (
+          <ModalBoleta fecha={fecha} setModalBoleta={setModalBoleta}/>
+        )}
     </div>
   )
 }

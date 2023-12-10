@@ -14,14 +14,31 @@ const Pedidos = () => {
   return <div>Pedidos</div>;
 };
 
+const fecha = new Date();
+let dia = fecha.getDate();
+let mes = fecha.getMonth() + 1; // Los meses en JavaScript empiezan desde 0
+let año = fecha.getFullYear();
+
+// Asegurándose de que el día y el mes sean de dos dígitos
+if (dia < 10) dia = '0' + dia;
+if (mes < 10) mes = '0' + mes;
+
+const fechaFormateada = dia + '/' + mes + '/' + año;
+
 export default function App() {
   const [carrito, setCarrito] = useState([]);
   const [monturas, setMonturas] = useState([]);
   const [errorConsultaMonturas, setsetErrorConsultaMonturas] = useState(false);
   const [precioTotal, setPrecioTotal] = useState(0);
   const [prescripcion, setPrescripcion] = useState([]);
+  const [fecha, setFecha] = useState('')
+
   useEffect(() => {
     obtenerGet("monturas", setMonturas, setsetErrorConsultaMonturas);
+  }, []);
+
+  useEffect(() => {
+    setFecha(fechaFormateada)
   }, []);
 
   return (
@@ -52,6 +69,7 @@ export default function App() {
               carrito={carrito}
               precioTotal={precioTotal}
               setPrecioTotal={setPrecioTotal}
+              fecha={fecha}
             />
           }
         />
