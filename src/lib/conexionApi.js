@@ -11,7 +11,7 @@ export const cargarApi = async () => {
 export const obtenerGet = async (endpoint, funcionSet, funcionSetError) => {
     const response = await fetch(`${url}/${endpoint}`)
     const data = await response.json()
-    if (data.error || data.length === 0) {
+    if (data.error || data.length === 0 || Object.keys(data).length === 0) {
         funcionSetError(true)
     }
     funcionSet(data)
@@ -67,3 +67,41 @@ export const emitirPdfPrescripcion = (idPrescripcion) => {
     return urlPdf
 }
 
+export const procesarBoleta = async (precioTotal, carrito) => {
+    const responseRegistrarBoleta = await fetch(`${url}/boletas`, {
+        method: 'POST',
+        body: JSON.stringify({
+            "precio_total": precioTotal,
+            "estado_recojo": "pendiente"
+        }),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    const resRegistrarBoleta = await responseRegistrarBoleta.json()
+    console.log(resRegistrarBoleta)
+    
+
+    const boleta = await fetch(`${url}/boleta/ultima`)
+    const responseBoleta = await boleta.json()
+    console.log(responseBoleta)
+
+
+    carrito.forEach(async item => {
+        console.log(item);
+        const responseMonturasPedidos = await fetch(`${url}/monturas_pedidos`, {
+            method: 'POST',
+            body: JSON.stringify({ 
+                "id_montura_inventario": item["monturaInventario"]["id_montura_inventario"],
+                "cantidad": item["cantidad"],
+                "precio": item["monturaInventario"]["precio_unit"]*item["cantidad"],
+                "id_boleta": responseBoleta["id_boleta"] 
+            }),
+            headers: {
+                'Content-type': 'application/json'
+            }
+        })
+        const resMonturasPedidos = await responseMonturasPedidos.json()
+        console.log(resMonturasPedidos)
+    })
+}

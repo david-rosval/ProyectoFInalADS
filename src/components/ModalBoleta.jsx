@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { obtenerEspecifico, obtenerGet, procesarBoleta, registrarPost } from "../lib/conexionApi";
 
-const ModalBoleta = ({ fecha, setModalBoleta }) => {
+const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion, adelanto }) => {
+
+    const [clienteBoleta, setClienteBoleta] = useState({})
+    const [errorClienteBoleta, setErrorClienteBoleta] = useState(false)
+    const [boleta, setBoleta] = useState({})
+    const [errorBoleta, setErrorBoleta] = useState(false)
+
+    useEffect(() => {
+        obtenerEspecifico("clientes/prescripcion", { "id_prescripcion": prescripcion[0]["id_prescripcion"] }, setClienteBoleta, setErrorClienteBoleta)
+    }, [])
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
       <div className="bg-white p-10 shadow-md rounded-lg w-[50rem]">
-        <form className="  flex flex-col w-full h-full ">
+        <div className="  flex flex-col w-full h-full ">
           <div className="flex flex-col w-full h-full p-5 px-10 mb-5 border-2 pt-5 rounded-lg">
             <p className="text-4xl font-bold mb-2">Arte Visual</p>
             <div className="flex">
@@ -29,13 +40,13 @@ const ModalBoleta = ({ fecha, setModalBoleta }) => {
                   </svg>
                   <p>902 501 054/968 600 415</p>
                 </div>
-                <p>Señor(a): {"Nombre de cliente"}</p>
-                <p>Dirección: {"Dirección de cliente"}</p>
-                <p>Teléfono: {"Número telefónico del cliente"}</p>
+                <p>Señor(a): {clienteBoleta["nombres_y_apellidos"]}</p>
+                <p>Dirección: {clienteBoleta["direccion"]}</p>
+                <p>Teléfono: {clienteBoleta["telefono"]}</p>
               </div>
               <div className="w-1/3 text-right">
                 <p className="uppercase">NOTA DE PEDIDO</p>
-                <p>00000{"idBoleta"}</p>
+                <p>00000{prescripcion[0]["id_prescripcion"]}</p>
                 <p>Fecha: {fecha}</p>
               </div>
             </div>
@@ -47,23 +58,27 @@ const ModalBoleta = ({ fecha, setModalBoleta }) => {
                     <th className="border w-[7rem] font-semibold">Cantidad</th>
                     <th className="border font-semibold">Descripción</th>
                     <th className="border w-[8rem] font-semibold">Precio Unit.</th>
-                    <th className="border w-[8rem] font-semibold">Importe</th>
+                    <th className="border w-[8rem] font-semibold">Importe</th>    
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="border">{"cantidad"}</td>
-                    <td className="border">{"descripción"}</td>
-                    <td className="border">{"precio unit."}</td>
-                    <td className="border">{"importe"}</td>
-                  </tr>
+                    {carrito.map(item => {
+                        return (
+                            <tr key={item["monturaInventario"]["codigo"]}>
+                                <td className="border">{item["cantidad"]}</td>
+                                <td className="border">{item["montura"]["nombre_montura"]}</td>
+                                <td className="border">S/.{item["monturaInventario"]["precio_unit"]}</td>
+                                <td className="border">S/.{item["monturaInventario"]["precio_unit"]*item["cantidad"]}</td>
+                            </tr>
+                        )
+                    })}
                 </tbody>
               </table>
             </div>
             <div className="flex justify-between">
-              <p>Adelanto: S/.{70}</p>
-              <p>Saldo: S/.{30}</p>
-              <p>Total: S/.{70 + 30}</p>
+              <p>Adelanto: S/.{adelanto}</p>
+              <p>Saldo: S/.{precioTotal-adelanto}</p>
+              <p>Total: S/.{precioTotal}</p>
             </div>
           </div>
           <h3 className="text-center text-2xl text-bold mb-8">
@@ -82,12 +97,14 @@ const ModalBoleta = ({ fecha, setModalBoleta }) => {
             <button
               type="submit"
               className="w-1/2 mt-2 cursor-pointer py-2  bg-slate-700 hover:bg-slate-800 text-white font-semibold text-center rounded-md "
-              onClick={(e) => {}}
+              onClick={(e) => {
+                procesarBoleta(precioTotal, carrito)
+              }}
             >
               Sí
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

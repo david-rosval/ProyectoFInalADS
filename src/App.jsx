@@ -70,6 +70,7 @@ export default function App() {
               precioTotal={precioTotal}
               setPrecioTotal={setPrecioTotal}
               fecha={fecha}
+              prescripcion={prescripcion}
             />
           }
         />
