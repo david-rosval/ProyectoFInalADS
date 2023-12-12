@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { obtenerEspecifico, obtenerGet, procesarBoleta, registrarPost } from "../lib/conexionApi";
 
-const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion, adelanto }) => {
+const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion, adelanto, precioLunas }) => {
 
     const [clienteBoleta, setClienteBoleta] = useState({})
     const [errorClienteBoleta, setErrorClienteBoleta] = useState(false)
@@ -72,6 +72,12 @@ const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion
                             </tr>
                         )
                     })}
+                    <tr>
+                      <td className="border">{1}</td>
+                      <td className="border">detalle de lunas: {prescripcion[0]["detalle_lunas"]}</td>
+                      <td className="border">S/.{parseFloat(precioLunas)}</td>
+                      <td className="border">S/.{1*parseFloat(precioLunas)}</td>
+                    </tr>
                 </tbody>
               </table>
             </div>
@@ -97,8 +103,9 @@ const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion
             <button
               type="submit"
               className="w-1/2 mt-2 cursor-pointer py-2  bg-slate-700 hover:bg-slate-800 text-white font-semibold text-center rounded-md "
-              onClick={(e) => {
-                procesarBoleta(precioTotal, carrito)
+              onClick={async (e) => {
+                procesarBoleta(precioTotal, carrito, adelanto, prescripcion[0]["id_prescripcion"], prescripcion[0]["detalle_lunas"], precioLunas );
+                
               }}
             >
               Sí

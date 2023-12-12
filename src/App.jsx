@@ -58,6 +58,7 @@ export default function App() {
               setMonturas={setMonturas}
               setPrecioTotal={setPrecioTotal}
               setPrescripcion={setPrescripcion}
+              prescripcion={prescripcion}
             />
           }
         />

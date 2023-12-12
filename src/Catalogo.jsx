@@ -6,11 +6,12 @@ import {
   obtenerEspecifico,
   registrarPost,
   obtenerGet,
+  prescripcionPdff,
 } from "./lib/conexionApi";
 import ModalVerCarrito from "./components/ModalVerCarrito";
 import { Navigate } from "react-router";
 
-export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas, setPrecioTotal, setPrescripcion }) => {
+export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas, setPrecioTotal, setPrescripcion, prescripcion }) => {
   // Se obtienen primero los detalles de cada montura
   
   // se obtienen los datos de precio, stock y código
@@ -31,7 +32,9 @@ export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas, setPrecio
 
   const [irAlCarrito, setIrAlCarrito] = useState(false)
 
-  // obtener detalle de monturas
+  useEffect(() => {
+
+  }, []);
   
   // obtener catalogo de monturas
   useEffect(() => {
@@ -43,7 +46,11 @@ export const Catalogo = ({ setCarrito, carrito, monturas, setMonturas, setPrecio
   }, []);
 
   useEffect(() => {
-    obtenerGet("prescripciones/ultimoregistro", setPrescripcion, setsetErrorUltimaPrescripcion);
+    const pdfPrescripcion = async () => {
+      await obtenerGet("prescripciones/ultimoregistro", setPrescripcion, setsetErrorUltimaPrescripcion);
+      await prescripcionPdff(prescripcion[0]["id_prescripcion"])
+    }
+    pdfPrescripcion()
   }, []);
 
 

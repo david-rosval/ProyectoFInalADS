@@ -67,7 +67,7 @@ export const emitirPdfPrescripcion = (idPrescripcion) => {
     return urlPdf
 }
 
-export const procesarBoleta = async (precioTotal, carrito) => {
+export const procesarBoleta = async (precioTotal, carrito, adelanto, idprescripcion, descripcion, precioLunas) => {
     const responseRegistrarBoleta = await fetch(`${url}/boletas`, {
         method: 'POST',
         body: JSON.stringify({
@@ -104,4 +104,29 @@ export const procesarBoleta = async (precioTotal, carrito) => {
         const resMonturasPedidos = await responseMonturasPedidos.json()
         console.log(resMonturasPedidos)
     })
+
+    const lunasPedido = await fetch(`${url}/lunas_pedido`, {
+        method: 'POST',
+        body: JSON.stringify({ 
+            "id_prescripcion": idprescripcion,
+            "precio": parseFloat(precioLunas),
+            "id_boleta": responseBoleta["id_boleta"] ,
+            "descripcion": descripcion,
+            "cantidad": 1
+        }),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    const resLunasPedido = await lunasPedido.json()
+    console.log(resLunasPedido);
+
+    const responsePDF = await fetch(`${url}/boleta/descargarPDF/${responseBoleta["id_boleta"]}/${adelanto}`)
+
+    window.open(responsePDF.url, "_blank");
+}
+
+export const prescripcionPdff = async (idPrescripcion) => {
+    const responsePDF = await fetch(`${url}/prescripcion/pdf/${idPrescripcion}`)
+    window.open(responsePDF.url, "_blank");
 }
