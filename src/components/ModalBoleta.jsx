@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { obtenerEspecifico, obtenerGet, procesarBoleta, registrarPost } from "../lib/conexionApi";
+import { Navigate } from "react-router";
 
-const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion, adelanto, precioLunas }) => {
+const ModalBoleta = ({ 
+  fecha, 
+  setModalBoleta, 
+  precioTotal, 
+  carrito, 
+  prescripcion, 
+  adelanto, 
+  precioLunas, 
+  setPrescripcion,
+  setPrecioTotal,
+  setCarrito 
+}) => {
 
     const [clienteBoleta, setClienteBoleta] = useState({})
     const [errorClienteBoleta, setErrorClienteBoleta] = useState(false)
     const [boleta, setBoleta] = useState({})
     const [errorBoleta, setErrorBoleta] = useState(false)
+
+    const [boletaEmitida, setBoletaEmitida] = useState(false)
 
     useEffect(() => {
         obtenerEspecifico("clientes/prescripcion", { "id_prescripcion": prescripcion[0]["id_prescripcion"] }, setClienteBoleta, setErrorClienteBoleta)
@@ -104,8 +118,16 @@ const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion
               type="submit"
               className="w-1/2 mt-2 cursor-pointer py-2  bg-slate-700 hover:bg-slate-800 text-white font-semibold text-center rounded-md "
               onClick={async (e) => {
-                procesarBoleta(precioTotal, carrito, adelanto, prescripcion[0]["id_prescripcion"], prescripcion[0]["detalle_lunas"], precioLunas );
-                
+                const finalizarEmisionBoleta = async () => {
+                  await procesarBoleta(precioTotal, carrito, adelanto, prescripcion[0]["id_prescripcion"], prescripcion[0]["detalle_lunas"], precioLunas );
+                  // reiniciar precioTotal carrito, prescripcion, 
+                  await setPrecioTotal(0)
+                  await setCarrito([])
+                  await setPrescripcion([])
+                  
+                }
+                finalizarEmisionBoleta()
+                setBoletaEmitida(true)
               }}
             >
               Sí
@@ -113,6 +135,9 @@ const ModalBoleta = ({ fecha, setModalBoleta, precioTotal, carrito, prescripcion
           </div>
         </div>
       </div>
+      {boletaEmitida && (
+        <Navigate to="/" replace={true}/>
+      )}
     </div>
   );
 };

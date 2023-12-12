@@ -8,7 +8,7 @@ export const CarritoItemLunas = ({ prescripcion, precioLunas, setPrecioLunas, se
       </div>
       <div className="block w-[350px]">
         <p className="truncate text-xl ">
-          Detalle de lunas: <span className='font-semibold uppercase'>{prescripcion[0]["detalle_lunas"] }</span>
+          Detalle de lunas: <span className='font-semibold uppercase'>{ prescripcion.length !== 0 && prescripcion[0]["detalle_lunas"] }</span>
         </p>
       </div>
       

@@ -105,6 +105,8 @@ export const procesarBoleta = async (precioTotal, carrito, adelanto, idprescripc
         console.log(resMonturasPedidos)
     })
 
+    
+
     const lunasPedido = await fetch(`${url}/lunas_pedido`, {
         method: 'POST',
         body: JSON.stringify({ 
