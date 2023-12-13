@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { actualizarPut, cargarApi, obtenerEspecifico, registrarPost } from "./lib/conexionApi";
-import Modal from "./components/Modal";
+import ModalAgregarCliente from "./components/ModalAgregarCliente";
 import ModalPrescripcion from "./components/ModalPrescripcion";
 import TablaMedidas from "./components/TablaMedidas";
 import BarraBusquedaCliente from "./components/BarraBusquedaCliente";
@@ -56,9 +56,9 @@ export const Prescripcion = () => {
   const [agudezavisualOIcerca, setAgudezavisualOIcerca] = useState(0);
 
   // States para crear nuevo cliente
-  const [nombresYApellidos, setNombresYApellidos] = useState("");
-  const [edad, setEdad] = useState("");
-  const [telefono, setTelefono] = useState("");
+  const [txtnombresYApellidos, setTxtNombresYApellidos] = useState("");
+  const [txtEdad, setTxtEdad] = useState("");
+  const [txtTelefono, setTxtTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
 
   // States para crear nueva prescripción
@@ -355,20 +355,20 @@ export const Prescripcion = () => {
       )}
 
       {openModal && (
-        <Modal
+        <ModalAgregarCliente
           openModal={openModal}
           setOpenModal={setOpenModal}
-          nombresYApellidos={nombresYApellidos}
-          setNombresYApellidos={setNombresYApellidos}
-          edad={edad}
-          setEdad={setEdad}
-          telefono={telefono}
-          setTelefono={setTelefono}
+          txtnombresYApellidos={txtnombresYApellidos}
+          setTxtNombresYApellidos={setTxtNombresYApellidos}
+          txtEdad={txtEdad}
+          setTxtEdad={setTxtEdad}
+          txtTelefono={txtTelefono}
+          setTxtTelefono={setTxtTelefono}
           direccion={direccion}
           setDireccion={setDireccion}
           setError={setError}
           setClienteBusqueda={setClienteBusqueda}
-        />
+        />  
       )}
       {openModalPrescripcion && (
         <ModalPrescripcion 

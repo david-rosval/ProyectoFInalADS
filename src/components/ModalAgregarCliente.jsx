@@ -1,15 +1,15 @@
 import React from "react";
 import { registrarPost } from "../lib/conexionApi";
 
-const Modal = ({
+const ModalAgregarCliente = ({
   openModal,
   setOpenModal,
-  nombresYApellidos,
-  setNombresYApellidos,
-  edad,
-  setEdad,
-  telefono,
-  setTelefono,
+  txtnombresYApellidos,
+  setTxtNombresYApellidos,
+  txtEdad,
+  setTxtEdad,
+  txtTelefono,
+  setTxtTelefono,
   direccion,
   setDireccion,
   setError,
@@ -23,16 +23,16 @@ const Modal = ({
             Agregar nuevo cliente
           </h3>
           <div className="">
-            <label htmlFor="nombresYApellidos" className="block">
+            <label htmlFor="txtnombresYApellidos" className="block">
               Nombres y apellidos
             </label>
             <input
               type="text"
-              id="nombresYApellidos"
+              id="txtnombresYApellidos"
               className="block w-full border p-2 rounded-md"
               placeholder="Ej. Juan Perez"
-              onChange={(e) => setNombresYApellidos(e.target.value)}
-              value={nombresYApellidos}
+              onChange={(e) => setTxtNombresYApellidos(e.target.value)}
+              value={txtnombresYApellidos}
             />
           </div>
           <div className="flex flex-row gap-3 my-3">
@@ -45,8 +45,8 @@ const Modal = ({
                 id="edad"
                 className="block w-full border p-2 rounded-md"
                 placeholder="Ej. 40"
-                onChange={(e) => setEdad(e.target.value)}
-                value={edad}
+                onChange={(e) => setTxtEdad(e.target.value)}
+                value={txtEdad}
               />
             </div>
             <div className="w-1/2">
@@ -58,8 +58,8 @@ const Modal = ({
                 id="telefono"
                 className="block w-full border p-2 rounded-md"
                 placeholder="Ej. 999888777"
-                onChange={(e) => setTelefono(e.target.value)}
-                value={telefono}
+                onChange={(e) => setTxtTelefono(e.target.value)}
+                value={txtTelefono}
               />
             </div>
           </div>
@@ -84,16 +84,16 @@ const Modal = ({
                 onClick={(e) => {
                   e.preventDefault();
                   const nuevoCliente = {
-                    nombres_y_apellidos: nombresYApellidos,
-                    edad: edad,
-                    telefono: telefono,
+                    nombres_y_apellidos: txtnombresYApellidos,
+                    edad: txtEdad,
+                    telefono: txtTelefono,
                     direccion: direccion,
                   };
                   registrarPost("clientes", nuevoCliente);
                   setOpenModal(false);
-                  setNombresYApellidos("");
-                  setEdad("");
-                  setTelefono("");
+                  setTxtNombresYApellidos("");
+                  setTxtEdad("");
+                  setTxtTelefono("");
                   setDireccion("");
                   setError(false);
                   setClienteBusqueda("");
@@ -108,9 +108,9 @@ const Modal = ({
                 onClick={(e) => {
                   e.preventDefault();
                   setOpenModal(false);
-                  setNombresYApellidos("");
-                  setEdad("");
-                  setTelefono("");
+                  setTxtNombresYApellidos("");
+                  setTxtEdad("");
+                  setTxtTelefono("");
                   setDireccion("");
                   setClienteBusqueda("");
                 }}
@@ -125,4 +125,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default ModalAgregarCliente;
