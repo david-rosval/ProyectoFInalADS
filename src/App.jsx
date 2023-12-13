@@ -1,3 +1,4 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { NavBar } from "./NavBar";
 import { Prescripcion } from "./Prescripcion";
@@ -5,6 +6,9 @@ import { Catalogo } from "./Catalogo";
 import { useEffect, useState } from "react";
 import { Carrito } from "./Carrito";
 import { obtenerGet } from "./lib/conexionApi";
+
+// CREAR CONTEXTO PARA PRESCRIPCION 
+export const PrescripcionContext = React.createContext()
 
 const Home = () => {
   return <div>Home</div>;
@@ -30,7 +34,11 @@ export default function App() {
   const [monturas, setMonturas] = useState([]);
   const [errorConsultaMonturas, setsetErrorConsultaMonturas] = useState(false);
   const [precioTotal, setPrecioTotal] = useState(0);
+  
+  
   const [prescripcion, setPrescripcion] = useState([]);
+  
+  
   const [fecha, setFecha] = useState('')
 
   useEffect(() => {
@@ -41,13 +49,17 @@ export default function App() {
     setFecha(fechaFormateada)
   }, []);
 
+
   return (
+    <PrescripcionContext.Provider value={[ carrito, setCarrito ]}>
     <div className="flex flex-col items-center h-screen">
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pedidos" element={<Pedidos />} />
+
         <Route path="/prescripcion" element={<Prescripcion />} />
+        
         <Route
           path="/catalogo"
           element={
@@ -78,5 +90,6 @@ export default function App() {
         />
       </Routes>
     </div>
+    </PrescripcionContext.Provider>
   );
 }

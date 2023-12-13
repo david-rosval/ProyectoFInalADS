@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { registrarPost } from "../lib/conexionApi";
+import ErrorMessage from "./ErrorMessage";
 
 const ModalAgregarCliente = ({
   openModal,
   setOpenModal,
+  
+  // campos para validar
   txtnombresYApellidos,
   setTxtNombresYApellidos,
   txtEdad,
@@ -12,9 +15,47 @@ const ModalAgregarCliente = ({
   setTxtTelefono,
   direccion,
   setDireccion,
+
   setError,
   setClienteBusqueda
 }) => {
+
+  const [errorDatosClienteVacios, setErrorDatosClienteVacios] = useState(false)
+  const [errorDatosNoValidos, setErrorDatosNoValidos] = useState(false)
+
+  const handleBtnAgregarCliente = async (e) => {
+    e.preventDefault();
+
+    setErrorDatosClienteVacios(false)
+    setErrorDatosNoValidos(false)
+
+    if (txtnombresYApellidos === "" || txtEdad === "" || txtTelefono === "" || direccion === "") {
+      setErrorDatosClienteVacios(true)
+      return
+    } else if (isNaN(parseInt(txtEdad)) || isNaN(parseInt(txtTelefono))) {
+      setErrorDatosNoValidos(true)
+      return
+    }
+
+    const cliente = {
+      "nombres_y_apellidos": txtnombresYApellidos,
+      "edad": txtEdad,
+      "telefono": txtTelefono,
+      "direccion": direccion
+    }
+
+    console.log("sí se puede");
+
+    await registrarPost("clientes", cliente)
+    setOpenModal(false);
+    setTxtNombresYApellidos("");
+    setTxtEdad("");
+    setTxtTelefono("");
+    setDireccion("");
+    setClienteBusqueda("")
+  }
+
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
       <div className="bg-white p-5 w-1/3 shadow-md rounded-lg">
@@ -81,28 +122,14 @@ const ModalAgregarCliente = ({
               <button
                 type="submit"
                 className="cursor-pointer py-2 w-full bg-slate-700 hover:bg-slate-800 text-white font-semibold text-center rounded-md mt-5"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const nuevoCliente = {
-                    nombres_y_apellidos: txtnombresYApellidos,
-                    edad: txtEdad,
-                    telefono: txtTelefono,
-                    direccion: direccion,
-                  };
-                  registrarPost("clientes", nuevoCliente);
-                  setOpenModal(false);
-                  setTxtNombresYApellidos("");
-                  setTxtEdad("");
-                  setTxtTelefono("");
-                  setDireccion("");
-                  setError(false);
-                  setClienteBusqueda("");
-                }}
+                onClick={e => handleBtnAgregarCliente(e)}
               >
                 Agregar cliente
               </button>
             </div>
             <div>
+              { errorDatosClienteVacios && <ErrorMessage mensaje={"Todos los campos son obligatorios"} />}
+              { errorDatosNoValidos && <ErrorMessage mensaje={"Ingresar datos válidos"} />}
               <button
                 className="cursor-pointer py-2 w-full bg-slate-300 hover:bg-slate-400 text-gray-700 font-semibold text-center rounded-md mt-2"
                 onClick={(e) => {

@@ -3,10 +3,9 @@ import React from "react";
 const BarraBusquedaCliente = ({
     clienteBusqueda,
     setClienteBusqueda,
-    setBtnBuscarClick,
-    setAsignacionNuevasMedidas,
     handleButtonBuscarCliente,
-    setError
+    setError,
+    setClientes
 }) => {
   return (
     <li className="flex flex-row gap-2 mb-2">
@@ -17,9 +16,8 @@ const BarraBusquedaCliente = ({
         placeholder="Nombre del cliente"
         onChange={(e) => {
           setClienteBusqueda(e.target.value);
-          setBtnBuscarClick(false);
-          setAsignacionNuevasMedidas(false);
           setError(false)
+          setClientes([])
         }}
         value={clienteBusqueda}
       />

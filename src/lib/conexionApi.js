@@ -17,7 +17,29 @@ export const obtenerGet = async (endpoint, funcionSet, funcionSetError) => {
     funcionSet(data)
 }
 
+export const obtenerUltimoRegistro = async (endpoint) => {
+    // obtenemos todos las registros de medidas
+    const response = await fetch(`${url}/${endpoint}`)
+    const data = await response.json()
+    if ( data.length !== 0 ) {
+        let ultimoRegistro = data[data.length - 1] 
+        return ultimoRegistro
+    } else return null
+}
+
 export const registrarPost = async (endpoint, data) => {
+    const response = await fetch(`${url}/${endpoint}`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    const res = await response.json()
+    console.log(res)
+}
+
+export const registrarPostRetornarUltimo = async (endpoint, data) => {
     const response = await fetch(`${url}/${endpoint}`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -38,6 +60,7 @@ export const obtenerEspecifico = async (endpoint, dato, funcionSet, funcionSetEr
         body: JSON.stringify(dato),
     })
     const data = await response.json()
+    console.log(data);
     funcionSet(data)
     if (data.error || data.length === 0) {
         funcionSetError(true)
@@ -53,7 +76,7 @@ export const actualizarPut = async (endpoint, data) => {
         }
     })
     const res = await response.json()
-    return res
+    console.log(res);
 }
 
 export const getEspecifico = async (endpoint, dato) => {
@@ -132,3 +155,71 @@ export const prescripcionPdff = async (idPrescripcion) => {
     const responsePDF = await fetch(`${url}/prescripcion/pdf/${idPrescripcion}`)
     window.open(responsePDF.url, "_blank");
 }
+
+export const encontrarMedidas = async (
+    cli,
+
+    setEsferaODLejos,
+    setCilindroODlejos,
+    setEjeODlejos,
+    setAgudezavisualODlejos,
+    setEsferaOIlejos,
+    setCilindroOIlejos,
+    setEjeOIlejos,
+    setAgudezavisualOIlejos,
+
+    setEsferaODcerca,
+    setCilindroODcerca,
+    setEjeODcerca,
+    setAgudezavisualODcerca,
+    setEsferaOIcerca,
+    setCilindroOIcerca,
+    setEjeOIcerca,
+    setAgudezavisualOIcerca,
+
+    setNoHayMedidas,
+    setIdMedidas
+) => {
+    const responseMedidasApi = await fetch(
+      `${url}/medidas/busqueda`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ "id_cliente": parseInt(cli["id_cliente"]) }),
+      }
+    );
+    const dataMedidas = await responseMedidasApi.json();
+    
+    
+    if (dataMedidas.length !== 0) {
+      setIdMedidas( dataMedidas[0]["id_medidas"] )      
+      setNoHayMedidas(false);
+
+      // almacena las medidas
+
+      setEsferaODLejos(dataMedidas[0]["Esfera_OD_lejos"]);
+      setCilindroODlejos(dataMedidas[0]["Cilindro_OD_lejos"]);
+      setEjeODlejos(dataMedidas[0]["Eje_OD_lejos"]);
+      setAgudezavisualODlejos(dataMedidas[0]["Agudeza_visual_OD_lejos"]);
+      setEsferaOIlejos(dataMedidas[0]["Esfera_OI_lejos"]);
+      setCilindroOIlejos(dataMedidas[0]["Cilindro_OI_lejos"]);
+      setEjeOIlejos(dataMedidas[0]["Eje_OI_lejos"]);
+      setAgudezavisualOIlejos(dataMedidas[0]["Agudeza_visual_OI_lejos"]);
+
+      setEsferaODcerca(dataMedidas[0]["Esfera_OD_cerca"]);
+      setCilindroODcerca(dataMedidas[0]["Cilindro_OD_cerca"]);
+      setEjeODcerca(dataMedidas[0]["Eje_OD_cerca"]);
+      setAgudezavisualODcerca(dataMedidas[0]["Agudeza_visual_OD_cerca"]);
+      setEsferaOIcerca(dataMedidas[0]["Esfera_OI_cerca"]);
+      setCilindroOIcerca(dataMedidas[0]["Cilindro_OI_cerca"]);
+      setEjeOIcerca(dataMedidas[0]["Eje_OI_cerca"]);
+      setAgudezavisualOIcerca(dataMedidas[0]["Agudeza_visual_OI_cerca"]);
+
+    } else {
+      setNoHayMedidas(true);
+      console.log("no hay medidas");
+    }
+    
+  };

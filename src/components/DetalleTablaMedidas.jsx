@@ -1,8 +1,24 @@
 import React from "react";
 
-const DetalleTablaMedidas = ({ medidas }) => {
-  return (
-    (medidas && medidas.length > 0) && (
+const DetalleTablaMedidas = ({ 
+  esferaODlejos, 
+  cilindroODlejos, 
+  ejeODlejos, 
+  agudezavisualODlejos, 
+  esferaOIlejos, 
+  cilindroOIlejos, 
+  ejeOIlejos, 
+  agudezavisualOIlejos, 
+  esferaODcerca, 
+  cilindroODcerca, 
+  ejeODcerca, 
+  agudezavisualODcerca, 
+  esferaOIcerca, 
+  cilindroOIcerca, 
+  ejeOIcerca, 
+  agudezavisualOIcerca,
+ }) => {
+  return ( 
       <div className=" flex flex-col gap-5 w-[462.3px] items-center justify-center px-5 mt-5">
         <div className=" flex flex-col items-center justify-center">
           <h3 className="font-semibold text-gray-500 mb-2 uppercase ">Lejos</h3>
@@ -26,19 +42,19 @@ const DetalleTablaMedidas = ({ medidas }) => {
               </thead>
               <tbody>
                 <tr>
-                  <td className="border">{medidas[0]["Esfera_OD_lejos"]}</td>
-                  <td className="border">{medidas[0]["Cilindro_OD_lejos"]}</td>
-                  <td className="border">{medidas[0]["Eje_OD_lejos"]}</td>
+                  <td className="border">{esferaODlejos}</td>
+                  <td className="border">{cilindroODlejos}</td>
+                  <td className="border">{ejeODlejos}</td>
                   <td className="border">
-                    {medidas[0]["Agudeza_visual_OD_lejos"]}
+                    {agudezavisualODlejos}
                   </td>
                 </tr>
                 <tr>
-                  <td className="border">{medidas[0]["Esfera_OI_lejos"]}</td>
-                  <td className="border">{medidas[0]["Cilindro_OI_lejos"]}</td>
-                  <td className="border">{medidas[0]["Eje_OI_lejos"]}</td>
+                  <td className="border">{esferaOIlejos}</td>
+                  <td className="border">{cilindroOIlejos}</td>
+                  <td className="border">{ejeOIlejos}</td>
                   <td className="border">
-                    {medidas[0]["Agudeza_visual_OI_lejos"]}
+                    {agudezavisualOIlejos}
                   </td>
                 </tr>
               </tbody>
@@ -67,19 +83,19 @@ const DetalleTablaMedidas = ({ medidas }) => {
               </thead>
               <tbody>
                 <tr>
-                  <td className="border">{medidas[0]["Esfera_OD_cerca"]}</td>
-                  <td className="border">{medidas[0]["Cilindro_OD_cerca"]}</td>
-                  <td className="border">{medidas[0]["Eje_OD_cerca"]}</td>
+                  <td className="border">{esferaODcerca}</td>
+                  <td className="border">{cilindroODcerca}</td>
+                  <td className="border">{ejeODcerca}</td>
                   <td className="border">
-                    {medidas[0]["Agudeza_visual_OD_cerca"]}
+                    {agudezavisualODcerca}
                   </td>
                 </tr>
                 <tr>
-                  <td className="border">{medidas[0]["Esfera_OI_cerca"]}</td>
-                  <td className="border">{medidas[0]["Cilindro_OI_cerca"]}</td>
-                  <td className="border">{medidas[0]["Eje_OI_cerca"]}</td>
+                  <td className="border">{esferaOIcerca}</td>
+                  <td className="border">{cilindroOIcerca}</td>
+                  <td className="border">{ejeOIcerca}</td>
                   <td className="border">
-                    {medidas[0]["Agudeza_visual_OI_cerca"]}
+                    {agudezavisualOIcerca}
                   </td>
                 </tr>
               </tbody>
@@ -87,7 +103,7 @@ const DetalleTablaMedidas = ({ medidas }) => {
           </div>
         </div>
       </div>
-    )
+    
   );
 };
 
