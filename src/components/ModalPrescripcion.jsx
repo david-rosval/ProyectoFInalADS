@@ -175,7 +175,7 @@ const ModalPrescripcion = ({
             </div>
           </div>
           <h3 className="text-center text-2xl text-bold mb-8">
-            ¿Estás seguro que deseas continuar?
+            ¿Estás seguro?
           </h3>
           <div className="flex gap-5">
             <button
